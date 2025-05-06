@@ -1,11 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-const User = require('../models/user');
+const User = require('../controllers/usersController');
 const authConfig = require('../config/auth');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-// Middleware para gerar token JWT
+// Middleware to generate JWT token
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, email: user.email, role: user.role },
@@ -14,16 +16,47 @@ const generateToken = (user) => {
   );
 };
 
-// Rota para registro de novos utilizadores
+// Google OAuth configuration
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:7777/auth/google/callback"
+  },
+  async function(accessToken, refreshToken, profile, done) {
+    try {
+      let user = await User.findByEmail(profile.emails[0].value);
+      
+      if (!user) {
+        const newUser = {
+          email: profile.emails[0].value,
+          name: profile.displayName,
+          password: Math.random().toString(36).slice(-8),
+          google: {
+            id: profile.id,
+            token: accessToken
+          }
+        };
+        
+        user = await User.createUser(newUser);
+      }
+
+      return done(null, user);
+    } catch (error) {
+      return done(error, null);
+    }
+  }
+));
+
+// User registration route
 router.post('/register', async (req, res) => {
   try {
-    // Verificar se o email já está em uso
+    // Check if email is already in use
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email já está em uso' });
     }
 
-    // Criar novo utilizador
+    // Create new user
     const newUser = new User({
       email: req.body.email,
       username: req.body.username,
@@ -34,7 +67,7 @@ router.post('/register', async (req, res) => {
 
     await newUser.save();
     
-    // Gerar token
+    // Generate token
     const token = generateToken(newUser);
     
     res.status(201).json({
@@ -52,20 +85,26 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Rota para login (autenticação local)
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', { session: false }, (err, user, info) => {
-    if (err) return next(err);
-    
+// Login route (local authentication)
+router.post('/login', async (req, res) => {
+  try {
+    // Find user by email
+    const user = await User.findByEmail(req.body.email);
     if (!user) {
-      return res.status(401).json({ message: info ? info.message : 'Login falhou' });
+      return res.status(401).json({ error: 'Email ou password inválidos' });
     }
-    
-    // Gerar token
+
+    // Verify password
+    const isValid = await user.comparePassword(req.body.password);
+    if (!isValid) {
+      return res.status(401).json({ error: 'Email ou password inválidos' });
+    }
+
+    // Generate token
     const token = generateToken(user);
-    
-    return res.json({
-      message: 'Login realizado com sucesso',
+
+    // Send response
+    res.json({
       token,
       user: {
         id: user._id,
@@ -74,48 +113,39 @@ router.post('/login', (req, res, next) => {
         role: user.role
       }
     });
-  })(req, res, next);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao autenticar utilizador', error: error.message });
+  }
 });
 
-// Autenticação com Facebook - Iniciar
-router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+// Start Google authentication
+router.get('/google',
+  passport.authenticate('google', { 
+    scope: ['profile', 'email'] 
+  })
+);
 
-// Callback do Facebook após autenticação
-router.get('/facebook/callback', 
-  passport.authenticate('facebook', { session: false, failureRedirect: '/login' }),
-  (req, res) => {
-    // Autenticação bem-sucedida, gerar token
+// Google callback
+router.get('/google/callback', 
+  passport.authenticate('google', { 
+    failureRedirect: 'http://localhost:7777/login',
+    session: false 
+  }),
+  function(req, res) {
     const token = generateToken(req.user);
     
-    // Redirecionar para frontend com token (ajuste a URL conforme necessário)
-    res.redirect(`/auth-success?token=${token}`);
+    // Redirect to frontend with token
+    res.redirect(`http://localhost:7777/auth-success?token=${token}`);
   }
 );
 
-// Autenticação com Google - Iniciar
-router.get('/google', passport.authenticate('google', { 
-  scope: ['profile', 'email']
-}));
-
-// Callback do Google após autenticação
-router.get('/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: '/login' }),
-  (req, res) => {
-    // Autenticação bem-sucedida, gerar token
-    const token = generateToken(req.user);
-    
-    // Redirecionar para frontend com token (ajuste a URL conforme necessário)
-    res.redirect(`/auth-success?token=${token}`);
-  }
-);
-
-// Rota para sair
+// Logout route
 router.get('/logout', (req, res) => {
   req.logout();
   res.json({ message: 'Logout realizado com sucesso' });
 });
 
-// Rota protegida para teste
+// Protected route for profile access
 router.get('/profile', 
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
