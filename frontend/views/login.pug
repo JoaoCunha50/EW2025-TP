@@ -7,6 +7,10 @@ block content
         h2 Login
       
       form.w3-container(action="/login" method="POST")
+        if error
+          .w3-panel.w3-pale-red.w3-border
+            p= error
+            
         .w3-margin
           label.w3-text-teal
             b Email

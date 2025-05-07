@@ -6,10 +6,9 @@ module.exports = {
     
     // Estratégia do Facebook
     facebook: {
-        clientID: '1188053349215844',
-        clientSecret: '7c237c88be8c241efadc3d74913c907d',
+        clientID: '1013003990897975',
+        clientSecret: 'f97eb0917bc1d5c2ca3652c2c116c805',
         callbackURL: 'http://localhost:3000/auth/facebook/callback',
-        profileFields: ['id', 'emails', 'name']
     },
     
     // Estratégia do Google

@@ -7,17 +7,16 @@ var mongoose = require('mongoose')
 var passport = require('./config/passport');
 var session = require('express-session');
 var cors = require('cors');
-var auth = require('./config/auth');
+var auth = require('./config/config');
 
-var mongoDB = 'mongodb://127.0.0.1:27017/diario'
+var mongoDB = 'mongodb://mongodb:27017/diario'
 mongoose.connect(mongoDB)
 var db = mongoose.connection
 db.on('error', console.error.bind(console, "Erro de conexão ao MongoBD"))
 db.once('open', () => console.log('Conexão ao MongoDB realizada com sucesso'))
 
-var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var authRouter = require('./routes/auth');
+var authRouter = require('./routes/auth/auth');
 
 var app = express();
 
@@ -41,7 +40,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 

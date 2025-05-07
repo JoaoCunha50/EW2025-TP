@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  .w3-container.w3-padding-64.w3-center
+    .w3-card-4.w3-white.w3-margin.w3-auto(style="max-width:600px")
+        .w3-container.w3-blue.w3-center
+        h2 Profile
+
+    .w3-container.w3-padding-16
+        if error
+            .w3-panel.w3-pale-red.w3-border
+            p= error
+
+        .w3-margin-bottom
+            h4.w3-text-grey Username
+            p.w3-large= user.username
+        
+        .w3-margin-bottom
+            h4.w3-text-grey Email
+            p.w3-large= user.email
+        
+        .w3-margin-bottom
+            h4.w3-text-grey Full Name
+            p.w3-large= user.name
+        
+        .w3-margin-bottom
+            h4.w3-text-grey Birth Date
+            p.w3-large= user.birthdate
+        
+        a.w3-button.w3-blue.w3-margin-top(href="/edit-profile") Edit Profile
+
+    .w3-container.w3-light-grey.w3-padding
+        p.w3-center
+        a.w3-text-blue(href="/") Back to Home
