@@ -16,7 +16,7 @@ router.get('/',
 router.post('/', function(req, res, next) {
   console.log(req.body);
   User.createUser(req.body)
-    .then(data => res.jsonp(data))
+    .then(data => res.status(200).jsonp(data))
     .catch(erro => res.status(500).jsonp(erro));
 });
 

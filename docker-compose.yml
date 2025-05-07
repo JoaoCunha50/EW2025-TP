@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mongodb:
     image: mongo
@@ -7,13 +5,43 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongoData2025:/data/db
+      - mongo2025:/data/db
+    networks:
+      - mynetwork
     restart: unless-stopped
-    # Opcionalmente, você pode adicionar variáveis de ambiente para configuração
-    # environment:
-    #   MONGO_INITDB_ROOT_USERNAME: root
-    #   MONGO_INITDB_ROOT_PASSWORD: example
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app/backend
+    networks:
+      - mynetwork
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app/frontend
+    networks:
+      - mynetwork
 
 volumes:
   mongo2025:
     name: mongo2025
+
+networks:
+  mynetwork:
+    driver: bridge

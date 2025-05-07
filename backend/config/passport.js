@@ -5,7 +5,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const User = require('../models/user');
-const authConfig = require('./auth');
+const authConfig = require('./config');
 
 // Configuração da estratégia local (username/password)
 passport.use(new LocalStrategy({
@@ -41,20 +41,19 @@ passport.use(new FacebookStrategy({
     clientID: authConfig.facebook.clientID,
     clientSecret: authConfig.facebook.clientSecret,
     callbackURL: authConfig.facebook.callbackURL,
-    profileFields: authConfig.facebook.profileFields
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      // Verificar se o utilizador já existe pelo ID do Facebook
       let user = await User.findOne({ 'facebook.id': profile.id });
       
       if (user) {
         return done(null, user);
       }
+      console.log(profile);
       
       // Se não existir, verificar se há um utilizador com o mesmo email
-      if (profile.emails && profile.emails.length > 0) {
-        const email = profile.emails[0].value;
+      if (profile.email && profile.email.length > 0) {
+        const email = profile.email[0].value;
         user = await User.findOne({ email: email });
         
         if (user) {
@@ -68,10 +67,10 @@ passport.use(new FacebookStrategy({
         }
       }
       
-      // Criar novo utilizador se não existir
+      // Criar novo utilizador se não
       const newUser = new User({
-        email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : '',
-        name: profile.name.givenName + ' ' + profile.name.familyName,
+        email: profile.email && profile.email.length > 0 ? profile.email[0].value : '',
+        name: profile.displayName,
         username: profile.id,
         facebook: {
           id: profile.id,
