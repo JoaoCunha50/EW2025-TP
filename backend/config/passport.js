@@ -7,7 +7,6 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const User = require('../models/user');
 const authConfig = require('./config');
 
-// Configuração da estratégia local (username/password)
 passport.use(new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
@@ -41,19 +40,17 @@ passport.use(new FacebookStrategy({
     clientID: authConfig.facebook.clientID,
     clientSecret: authConfig.facebook.clientSecret,
     callbackURL: authConfig.facebook.callbackURL,
+    profileFields: ['id', 'displayName', 'email'],
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
       let user = await User.findOne({ 'facebook.id': profile.id });
-      
       if (user) {
         return done(null, user);
       }
-      console.log(profile);
       
-      // Se não existir, verificar se há um utilizador com o mesmo email
-      if (profile.email && profile.email.length > 0) {
-        const email = profile.email[0].value;
+      if (profile._json.email) {
+        const email = profile._json.email;
         user = await User.findOne({ email: email });
         
         if (user) {
@@ -69,14 +66,14 @@ passport.use(new FacebookStrategy({
       
       // Criar novo utilizador se não
       const newUser = new User({
-        email: profile.email && profile.email.length > 0 ? profile.email[0].value : '',
+        email: profile._json.email ? profile._json.email : '',
         name: profile.displayName,
         username: profile.id,
         facebook: {
           id: profile.id,
           token: accessToken
         },
-        password: Math.random().toString(36).slice(-8) // Senha aleatória
+        password: Math.random().toString(36).slice(-8)
       });
       
       await newUser.save();
@@ -95,14 +92,12 @@ passport.use(new GoogleStrategy({
   },
   async (token, tokenSecret, profile, done) => {
     try {
-      // Verificar se o utilizador já existe pelo ID do Google
       let user = await User.findOne({ 'google.id': profile.id });
       
       if (user) {
         return done(null, user);
       }
-      
-      // Se não existir, verificar se há um utilizador com o mesmo email
+
       if (profile.emails && profile.emails.length > 0) {
         const email = profile.emails[0].value;
         user = await User.findOne({ email: email });
@@ -127,7 +122,7 @@ passport.use(new GoogleStrategy({
           id: profile.id,
           token: token
         },
-        password: Math.random().toString(36).slice(-8) // Senha aleatória
+        password: Math.random().toString(36).slice(-8)
       });
       
       await newUser.save();

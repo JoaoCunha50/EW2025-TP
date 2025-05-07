@@ -6,8 +6,8 @@ module.exports = {
     
     // Estratégia do Facebook
     facebook: {
-        clientID: '1013003990897975',
-        clientSecret: 'f97eb0917bc1d5c2ca3652c2c116c805',
+        clientID: '567838039251795',
+        clientSecret: 'eafffdc720d6641c9eb5f8706bf5111c',
         callbackURL: 'http://localhost:3000/auth/facebook/callback',
     },
     

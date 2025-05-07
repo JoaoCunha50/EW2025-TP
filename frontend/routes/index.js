@@ -16,7 +16,7 @@ router.get('/register', function(req, res, next) {
 
 router.post('/register', async function(req, res, next) {
   try {
-    const response = await axios.post('http://localhost:3000/users', {
+    const response = await axios.post('http://backend:3000/users', {
       email: req.body.email,
       username: req.body.username,
       password: req.body.password,
@@ -47,7 +47,7 @@ router.post('/register', async function(req, res, next) {
 
 router.post('/login', async function(req, res, next) {
   try {
-    const response = await axios.post('http://localhost:3000/auth/login', {
+    const response = await axios.post('http://backend:3000/auth/login', {
       email: req.body.email,
       password: req.body.password
     });
@@ -78,17 +78,37 @@ router.post('/login', async function(req, res, next) {
   }
 });
 
-router.get('/profile', (req, res) => {
-  res.render('profile', {
-    title: 'Diário - Profile',
-    user: JSON.parse(req.cookies.user)
-  });
-});
+router.get('/profile', async(req, res) => {
+  try {
+    const userInfo = JSON.parse(req.cookies.user);
+    const email = userInfo.email;
 
-router.get('policy-privacy', (req, res) => {
-  res.render('policy-privacy', {
-    title: 'Diário - Política de Privacidade'
-  });
+    const response = await axios.get(`http://backend:3000/users/${email}`, {
+      headers: {
+        'Authorization': `Bearer ${req.cookies.token}`
+      }
+    });
+
+    if (response.status !== 200) {
+      return res.render('error', {
+        title: 'Error',
+        error: 'ya'
+      });
+    }
+    const user = response.data;
+    console.log(user)
+    res.render('profile', {
+      title: 'Diário - Profile',
+      user: user
+    });
+  } catch (error) {
+    console.error('Error processing profile:', error);
+    res.render('error', {
+      title: 'Error',
+      error: error
+    });
+  }
+
 });
 
 module.exports = router;

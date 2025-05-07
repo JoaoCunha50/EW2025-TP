@@ -4,7 +4,7 @@ const passport = require('../../config/passport');
 const { generateToken } = require('./token');
 
 router.get('/',
-    passport.authenticate('facebook', { scope: ['public_profile']}),
+    passport.authenticate('facebook', { scope: ['public_profile', 'email']}),
 );
 
 router.get('/callback', 
