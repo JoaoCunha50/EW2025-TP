@@ -1,11 +1,10 @@
 require('dotenv').config();
 const express = require('express');
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 const User = require('../controllers/usersController');
 const authConfig = require('../config/auth');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const passport = require('../config/passport');
 
 // Middleware to generate JWT token
 const generateToken = (user) => {
@@ -15,37 +14,6 @@ const generateToken = (user) => {
     { expiresIn: '1d' }
   );
 };
-
-// Google OAuth configuration
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:7777/auth/google/callback"
-  },
-  async function(accessToken, refreshToken, profile, done) {
-    try {
-      let user = await User.findByEmail(profile.emails[0].value);
-      
-      if (!user) {
-        const newUser = {
-          email: profile.emails[0].value,
-          name: profile.displayName,
-          password: Math.random().toString(36).slice(-8),
-          google: {
-            id: profile.id,
-            token: accessToken
-          }
-        };
-        
-        user = await User.createUser(newUser);
-      }
-
-      return done(null, user);
-    } catch (error) {
-      return done(error, null);
-    }
-  }
-));
 
 // User registration route
 router.post('/register', async (req, res) => {
@@ -120,22 +88,24 @@ router.post('/login', async (req, res) => {
 
 // Start Google authentication
 router.get('/google',
-  passport.authenticate('google', { 
-    scope: ['profile', 'email'] 
-  })
+  passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-// Google callback
+// Google callback - ajustado para incluir informações do usuário
 router.get('/google/callback', 
   passport.authenticate('google', { 
-    failureRedirect: 'http://localhost:7777/login',
+    failureRedirect: '/login',
     session: false 
   }),
   function(req, res) {
     const token = generateToken(req.user);
-    
-    // Redirect to frontend with token
-    res.redirect(`http://localhost:7777/auth-success?token=${token}`);
+    const userInfo = {
+      id: req.user._id,
+      email: req.user.email,
+      name: req.user.name,
+      role: req.user.role
+    };
+    res.redirect(`http://localhost:7777/auth/google/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(userInfo))}`);
   }
 );
 
@@ -144,21 +114,5 @@ router.get('/logout', (req, res) => {
   req.logout();
   res.json({ message: 'Logout realizado com sucesso' });
 });
-
-// Protected route for profile access
-router.get('/profile', 
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    res.json({ 
-      message: 'Acesso autorizado',
-      user: {
-        id: req.user._id,
-        email: req.user.email,
-        name: req.user.name,
-        role: req.user.role
-      }
-    });
-  }
-);
 
 module.exports = router;

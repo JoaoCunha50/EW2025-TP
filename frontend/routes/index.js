@@ -3,7 +3,6 @@ var router = express.Router();
 var axios = require('axios');
 var passport = require('passport');
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('home', { title: 'Express' });
 });
@@ -20,14 +19,12 @@ router.post('/login', async function(req, res, next) {
     });
     
     if (response.data.token) {
-      // Store token in cookie
       res.cookie('token', response.data.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production'
       });
       res.cookie('user', JSON.stringify(response.data.user));
       
-      // Redirect based on user role
       if (response.data.user.role === 'admin') {
         res.redirect('/admin');
       } else {
@@ -47,36 +44,27 @@ router.post('/login', async function(req, res, next) {
   }
 });
 
-// GOOGLE OAUTH ROUTES
-// Instead of trying to implement OAuth in the frontend directly,
-// we should redirect to the backend's OAuth endpoint
 router.get('/auth/google', (req, res) => {
   res.redirect('http://localhost:3000/auth/google');
 });
 
-// Handle the OAuth callback from the backend
-router.get('/auth/google/callback', async (req, res) => {
-  // This will be called by the backend after successful authentication
-  const token = req.query.token;
+// Handle the OAuth callback from the backend - simplificado
+router.get('/auth/google/callback', (req, res) => {
+  const { token, user } = req.query;
   
-  if (token) {
+  if (token && user) {
     try {
-      // Verify the token and get user info
-      const response = await axios.get('http://localhost:3000/auth/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const userData = JSON.parse(decodeURIComponent(user));
       
       // Store token in cookie
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production'
       });
-      res.cookie('user', JSON.stringify(response.data.user));
+      res.cookie('user', user);
       
       // Redirect based on user role
-      if (response.data.user.role === 'admin') {
+      if (userData.role === 'admin') {
         res.redirect('/admin');
       } else {
         res.redirect('/profile');
@@ -90,7 +78,7 @@ router.get('/auth/google/callback', async (req, res) => {
   } else {
     res.render('login', {
       title: 'Login',
-      error: 'Authentication failed - No token received'
+      error: 'Authentication failed - No token or user data received'
     });
   }
 });

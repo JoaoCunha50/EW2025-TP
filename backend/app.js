@@ -7,6 +7,7 @@ var mongoose = require('mongoose')
 var passport = require('./config/passport');
 var session = require('express-session');
 var cors = require('cors');
+var auth = require('./config/auth');
 
 var mongoDB = 'mongodb://127.0.0.1:27017/diario'
 mongoose.connect(mongoDB)
@@ -30,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuração da sessão para passport
 app.use(session({
-  secret: 'your_session_secret_key',
+  secret: auth.local.secret,
   resave: false,
   saveUninitialized: false,
   cookie: { secure: process.env.NODE_ENV === 'production' }
