@@ -21,6 +21,7 @@ services:
       - mongodb
     volumes:
       - ./backend:/app/backend
+      - /app/backend/node_modules
     networks:
       - mynetwork
 
@@ -35,6 +36,7 @@ services:
       - backend
     volumes:
       - ./frontend:/app/frontend
+      - /app/frontend/node_modules
     networks:
       - mynetwork
 
