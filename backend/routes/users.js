@@ -13,7 +13,6 @@ router.get('/',
       .catch(erro => res.status(500).jsonp(erro));
 });
 
-/* Criação de utilizador - acesso público */
 router.post('/', function(req, res, next) {
   console.log(req.body);
   User.createUser(req.body)
@@ -21,7 +20,6 @@ router.post('/', function(req, res, next) {
     .catch(erro => res.status(500).jsonp(erro));
 });
 
-/* GET do user por email - acesso autenticado */
 router.get('/:email', 
   auth.isAuthenticated, 
   function(req, res, next) {
@@ -35,11 +33,9 @@ router.get('/:email',
       .catch(erro => res.status(500).jsonp(erro));
 });
 
-/* DELETE de utilizador - apenas para admin ou o próprio utilizador */
 router.delete('/:email', 
   auth.isAuthenticated,
   function(req, res, next) {
-    // Verificar se é admin ou o próprio utilizador
     if (req.user.role === 'admin' || req.user.email === req.params.email) {
       User.removeUser(req.params.email)
         .then(data => {
@@ -54,11 +50,9 @@ router.delete('/:email',
     }
 });
 
-/* Atualização de utilizador - apenas para admin ou o próprio utilizador */
 router.put('/:email', 
   auth.isAuthenticated,
   function(req, res, next) {
-    // Verificar se é admin ou o próprio utilizador
     if (req.user.role === 'admin' || req.user.email === req.params.email) {
       User.updateUser(req.params.email, req.body)
         .then(data => {

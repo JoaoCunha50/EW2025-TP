@@ -1,7 +1,7 @@
 module.exports = {
     // Estratégia local
     local: {
-        secret: 'your_jwt_secret_key_here'
+        secret: 'ew2025'
     },
     
     // Estratégia do Facebook
