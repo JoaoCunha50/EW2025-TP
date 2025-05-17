@@ -1,0 +1,68 @@
+extends layout
+
+block content
+    .w3-container.w3-padding-32
+        if error 
+            .w3-panel.w3-red.w3-display-container.w3-margin-bottom
+                span.w3-button.w3-display-topright(onclick="this.parentElement.style.display='none'") &times;
+                h3 Error!
+                p= error
+
+        .w3-card.w3-white
+            .w3-container.w3-padding
+                if post.files && post.files.length > 0
+                    .w3-row-padding.w3-margin-bottom
+                        each file in post.files
+                            if file.type && file.type.startsWith('image/')
+                                .w3-col.s12.w3-margin-bottom
+                                    img.w3-image(src=file.path alt=file.filename style="width:100%")
+                            else if file.type && file.type.startsWith('application/')
+                                .w3-col.s12.w3-margin-bottom
+                                    .w3-container.w3-padding.w3-light-grey
+                                        i.fa.fa-file-pdf.w3-text-red.w3-xlarge
+                                        a.w3-margin-left(href=file.path target="_blank")= file.filename
+
+                if isAdmin
+                    input#title.w3-input.w3-border.w3-margin-bottom(type="text" value=post.title name="title")
+                    textarea#content.w3-input.w3-border.w3-margin-bottom(name="content" rows="4")= post.content
+                    input#files.w3-input.w3-border.w3-margin-bottom(type="file" name="files" multiple)
+                else
+                    h2= post.title || 'Untitled'
+                    p= post.content || 'No content'
+
+                .w3-row.w3-padding-small.w3-opacity
+                    .w3-col.s6
+                        span
+                            i.fa.fa-calendar.w3-margin-right
+                            | #{new Date(post.createdAt).toLocaleDateString('pt-PT')}
+
+            .w3-container.w3-padding.w3-light-grey
+                h3 Comments
+                if post.comments && post.comments.length > 0
+                    each comment in post.comments
+                        .w3-container.w3-white.w3-margin-bottom.w3-round
+                            p.w3-opacity-min= comment.author
+                            p= comment.content
+                            p.w3-tiny.w3-opacity= new Date(comment.date).toLocaleDateString('pt-PT')
+                else
+                    p.w3-opacity No comments yet
+
+            if isAdmin
+                .w3-bar.w3-padding
+                    button.w3-bar-item.w3-button.w3-blue(onclick=`submitEdit(${JSON.stringify(post)})`)
+                        i.fa.fa-edit.w3-margin-right
+                        | Edit
+
+                    button.w3-bar-item.w3-button.w3-red(onclick=`deletePost('${post._id}')`)
+                        i.fa.fa-trash.w3-margin-right
+                        | Delete
+
+                if authenticated
+                    .w3-container.w3-padding-16
+                        textarea.w3-input.w3-border.w3-margin-bottom(placeholder="Add a comment..." rows="2")
+                        button.w3-button.w3-blue Post Comment
+
+block scripts
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+    if isAdmin
+        script(src="/javascripts/posts.js")

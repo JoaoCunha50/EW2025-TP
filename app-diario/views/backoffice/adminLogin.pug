@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+  .w3-container.w3-display-middle
+    .w3-card-4.w3-round-large(style="width:400px;")
+      header.w3-container.w3-teal.w3-center.w3-round-large
+        h2 Login
+      
+      form.w3-container(action="/admin/login" method="POST")
+        if error
+          .w3-panel.w3-pale-red.w3-border
+            p= error
+            
+        .w3-margin
+          label.w3-text-teal
+            b Email
+          input.w3-input.w3-border.w3-round(type="email" name="email" required)
+        
+        .w3-margin
+          label.w3-text-teal
+            b Password
+          input.w3-input.w3-border.w3-round(type="password" name="password" required)
+        
+        .w3-margin.w3-center
+          button.w3-button.w3-teal.w3-round-large.w3-block(type="submit") Login
