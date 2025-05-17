@@ -1,0 +1,52 @@
+extends ../layout
+
+block content
+    .w3-container.w3-padding-32
+        .w3-row.w3-margin-bottom
+            .w3-col.l9.m8.s12.w3-container
+                h3= "Francisco Castro"
+                p= "ciscozin"
+                if authenticated
+                    button.w3-button.w3-red.w3-right(onclick="logout()") Logout
+                else 
+                    button.w3-button.w3-teal.w3-right(onclick="window.location.href='/login'") Sign In
+                .w3-row
+                    .w3-col.s3.w3-center
+                        p
+                            b Posts
+                            br
+                            span 23
+                    .w3-col.s3.w3-center
+                        p
+                            b Followers
+                            br
+                            span 200
+        .w3-row-padding
+            each post in posts || []
+                .w3-col.l4.m6.s12.w3-margin-bottom
+                    .w3-card.w3-hover-shadow(style="transition: transform 0.3s; cursor: pointer" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" onclick=`window.location.href='/post/${post._id}'`)
+                        .w3-container.w3-white(style="padding: 16px")
+                            if post.files && post.files.length > 0
+                                each file in post.files
+                                    if file.type && file.type.startsWith('image/')
+                                        .w3-container(style="padding: 8px 0")
+                                            img.w3-image(src=file.path alt=file.filename style="width:100%")
+                                    else if file.type && file.type.startsWith('application/')
+                                        .w3-container.w3-padding
+                                            i.fa.fa-file-pdf.w3-text-red.w3-xlarge
+                                            span.w3-margin-left= file.filename
+                            h4= post.title || 'Untitled'
+                            p.w3-opacity.w3-padding-small= new Date(post.createdAt).toLocaleDateString('pt-PT')
+                            p.w3-padding-small= post.content || 'No content'
+                            .w3-row.w3-padding-small
+                                .w3-col
+                                    span.w3-text-grey Comments: #{(post.comments.length) || 0}
+
+        if !posts || posts.length === 0
+            .w3-container.w3-center.w3-padding-64
+                h3.w3-text-grey No posts yet
+                p.w3-text-grey Wait for the user to create is first post!
+
+block scripts
+    script(src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js")
+    script(src="/javascripts/logout.js")

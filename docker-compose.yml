@@ -10,33 +10,33 @@ services:
       - mynetwork
     restart: unless-stopped
 
-  backend:
+  api:
     build:
-      context: ./backend
+      context: ./api
       dockerfile: Dockerfile
-    container_name: backend
+    container_name: api
     ports:
       - "3000:3000"
     depends_on:
       - mongodb
     volumes:
-      - ./backend:/app/backend
-      - /app/backend/node_modules
+      - ./api:/api
+      - /api/node_modules
     networks:
       - mynetwork
 
-  frontend:
+  app-diario:
     build:
-      context: ./frontend
+      context: ./app-diario
       dockerfile: Dockerfile
-    container_name: frontend
+    container_name: app-diario
     ports:
       - "8080:8080"
     depends_on:
-      - backend
+      - api
     volumes:
-      - ./frontend:/app/frontend
-      - /app/frontend/node_modules
+      - ./app-diario:/app/diario
+      - /app/diario/node_modules
     networks:
       - mynetwork
 

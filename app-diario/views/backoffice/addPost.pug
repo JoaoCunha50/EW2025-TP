@@ -1,0 +1,67 @@
+extends ../layout
+
+block content
+    .w3-container
+        h1.w3-center New Diary Entry
+        if error 
+            .w3-panel.w3-red.w3-display-container.w3-margin-bottom
+                span.w3-button.w3-display-topright(onclick="this.parentElement.style.display='none'") &times;
+                h3 Error!
+                p= error
+        form.w3-container(action="/admin/addpost" method="POST" enctype="multipart/form-data")
+            .w3-margin
+                label(for="title") Title
+                input.w3-input.w3-border#title(type="text" name="title" required)
+            
+            .w3-margin
+                label(for="content") Content
+                textarea.w3-input.w3-border#content(name="content" rows="6" required)
+            
+            .w3-margin
+                label(for="tags") Select Tags
+                select.w3-select.select2-tags#tags(name="tags[]" multiple="multiple" style="width: 100%")
+                    option(value="travel") Travel
+                    option(value="food") Food & Cuisine
+                    option(value="culture") Culture
+                    option(value="reflection") Personal Reflection
+                    option(value="nature") Nature
+                    option(value="learning") Learning Experience
+                    option(value="friends") Friends & People
+                    option(value="challenges") Challenges
+                    option(value="achievement") Achievement
+                    option(value="work") Work Experience
+                    option(value="family") Family
+                    option(value="memories") Memories
+            
+            .w3-margin
+                input.w3-check#isPublic(type="checkbox" name="isPublic")
+                label.w3-padding-small(for="isPublic") Make this post public
+            
+            .w3-margin
+                label(for="files") Attach Files
+                input.w3-input.w3-border#files(type="file" name="files" multiple)
+            
+            .w3-margin.w3-right-align
+                button.w3-button.w3-light-grey.w3-margin-right(type="reset") Clear
+                button.w3-button.w3-blue(type="submit") Save Entry
+
+block scripts
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css")
+    
+    script.
+        $(document).ready(function() {
+            $('#tags').select2({
+                placeholder: "Choose your tags...",
+                allowClear: true,
+                tags: false,
+                tokenSeparators: [','],
+                width: 'resolve'
+            });
+            
+            $('button[type="reset"]').click(function() {
+                $('#tags').val(null).trigger('change');
+            });
+            console.log(tags)
+        });

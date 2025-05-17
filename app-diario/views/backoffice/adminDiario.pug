@@ -1,0 +1,70 @@
+extends ../layout
+
+block content
+    .w3-container.w3-padding-32
+        if error 
+            .w3-panel.w3-red.w3-display-container.w3-margin-bottom
+                span.w3-button.w3-display-topright(onclick="this.parentElement.style.display='none'") &times;
+                h3 Error!
+                p= error
+
+        .w3-row.w3-margin-bottom
+            .w3-col.l9.m8.s12.w3-container
+                .w3-row
+                    .w3-col.s8
+                        h3= "Francisco Castro"
+                    .w3-col.s2
+                        p= "ciscozin"
+                    .w3-col.s2
+                        button.w3-button.w3-red(onclick="logout()") Logout
+        .w3-row.w3-margin-bottom
+            .w3-col.s12
+                .w3-card.w3-padding
+                    h3 Dashboard
+                    .w3-row-padding
+                        .w3-half
+                            .w3-container.w3-blue.w3-padding
+                                h4 Total Users
+                                h2= totalUsers || 0
+                        .w3-half
+                            .w3-container.w3-green.w3-padding
+                                h4 Total Posts
+                                h2= totalPosts || 0
+
+        .w3-container.w3-margin-bottom
+            .w3-bar
+                button.w3-bar-item.w3-button.w3-blue(onclick="window.location.href='/admin/addpost'")
+                    i.fa.fa-plus.w3-margin-right
+                    | Add New Post
+                input.w3-bar-item.w3-input.w3-border(type="text" placeholder="Search posts...")
+
+        .w3-row-padding
+            each post in posts || []
+                .w3-col.l4.m6.w3-margin-bottom
+                    .w3-card.w3-hover-shadow(style="transition: transform 0.3s; cursor: pointer" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" onclick=`window.location.href='/admin/post/${post._id}'`)
+                        .w3-container.w3-white(style="padding: 16px")
+                            if post.files && post.files.length > 0
+                                each file in post.files
+                                    if file.type && file.type.startsWith('image/')
+                                        img.w3-image(src=file.path alt=file.filename style="width:100%")
+                                    else if file.type && file.type.startsWith('application/')
+                                        .w3-container.w3-padding
+                                            i.fa.fa-file-pdf.w3-text-red.w3-xlarge
+                                            span.w3-margin-left= file.filename
+                            h4= post.title || 'Untitled'
+                            p.w3-opacity= new Date(post.createdAt).toLocaleDateString()
+                            p= post.content || 'No content'
+                            .w3-row
+                                .w3-col
+                                    span.w3-text-grey Comments: #{(post.comments && post.comments.length) || 0}
+                            .w3-bar
+                                button.w3-bar-item.w3-button.w3-blue(onclick=`event.stopPropagation(); editPost('${post._id}')`)
+                                    i.fa.fa-edit
+                                button.w3-bar-item.w3-button.w3-red(onclick=`event.stopPropagation(); deletePost('${post._id}')`)
+                                    i.fa.fa-trash
+
+block scripts
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js")
+    script(src="/javascripts/logout.js")
+    script(src="/javascripts/posts.js")
