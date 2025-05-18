@@ -1,67 +1,100 @@
 extends ../layout
 
 block content
-    .w3-container.w3-padding-32
+    .w3-container.w3-padding-32.w3-padding-large
         if error 
-            .w3-panel.w3-red.w3-display-container.w3-margin-bottom
+            .w3-panel.w3-red.w3-display-container.w3-round-large.w3-margin-bottom
                 span.w3-button.w3-display-topright(onclick="this.parentElement.style.display='none'") &times;
                 h3 Error!
                 p= error
 
-        .w3-row.w3-margin-bottom
+        // Header - Gradiente mais suave e amigável
+        .w3-row.w3-margin-bottom.w3-padding-16.w3-round-large.w3-white(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
             .w3-col.l9.m8.s12.w3-container
                 .w3-row
-                    .w3-col.s8
-                        h3= "Francisco Castro"
-                    .w3-col.s2
-                        p= "ciscozin"
-                    .w3-col.s2
-                        button.w3-button.w3-red(onclick="logout()") Logout
+                    .w3-col.s8.w3-half
+                        h3.w3-text-black(style="text-shadow: 1px 1px 3px rgba(0,0,0,0.3)")= "Francisco Castro"
+                        h5.w3-text-black.w3-opacity= "Administrator"
+                button.w3-button.w3-round-large.w3-red.w3-hover-red.w3-margin-top(onclick="logout()" style="transition: transform 0.3s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                        i.fa.fa-sign-out.w3-margin-right
+                        | Logout
+
         .w3-row.w3-margin-bottom
             .w3-col.s12
-                .w3-card.w3-padding
-                    h3 Dashboard
+                .w3-card.w3-round-large.w3-white.w3-padding(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
+                    h3.w3-panel.w3-border-bottom Dashboard Overview
                     .w3-row-padding
-                        .w3-half
-                            .w3-container.w3-blue.w3-padding
-                                h4 Total Users
-                                h2= totalUsers || 0
-                        .w3-half
-                            .w3-container.w3-green.w3-padding
-                                h4 Total Posts
-                                h2= totalPosts || 0
+                        .w3-half.w3-margin-bottom
+                            .w3-container.w3-round-large.w3-padding-24(style="background: linear-gradient(to right, #00c6fb 0%, #005bea 100%); color: white")
+                                .w3-left
+                                    i.fa.fa-users.w3-jumbo
+                                .w3-right
+                                    h4 Total Users
+                                    h2.w3-xxlarge= totalUsers || 0
+                        .w3-half.w3-margin-bottom
+                            .w3-container.w3-round-large.w3-padding-24(style="background: linear-gradient(to right, #00d2ff 0%, #3a7bd5 100%); color: white")
+                                .w3-left
+                                    i.fa.fa-file-alt.w3-jumbo
+                                .w3-right
+                                    h4 Total Posts
+                                    h2.w3-xxlarge= totalPosts || 0
 
-        .w3-container.w3-margin-bottom
+        .w3-container.w3-margin-bottom.w3-card.w3-round-large.w3-white
             .w3-bar
-                button.w3-bar-item.w3-button.w3-blue(onclick="window.location.href='/admin/addpost'")
-                    i.fa.fa-plus.w3-margin-right
+                button.w3-bar-item.w3-button.w3-round-large.w3-hover-black(onclick="window.location.href='/admin/add/post'" style="transition: all 0.3s; margin-top: 10px; background: linear-gradient(to right, #00d2ff 0%, #3a7bd5 100%); color: white")
+                    i.fa.fa-plus-circle.w3-margin-right
                     | Add New Post
-                input.w3-bar-item.w3-input.w3-border(type="text" placeholder="Search posts...")
+                .w3-bar-item.w3-right
+                    .w3-input.w3-border.w3-round-large(style="padding: 8px; width: 300px")
+                        i.fa.fa-search.w3-margin-right
+                        input.w3-input.w3-border-0(type="text" placeholder="Search posts..." style="display: inline; width: 85%; padding: 0px;")
 
         .w3-row-padding
             each post in posts || []
                 .w3-col.l4.m6.w3-margin-bottom
-                    .w3-card.w3-hover-shadow(style="transition: transform 0.3s; cursor: pointer" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" onclick=`window.location.href='/admin/post/${post._id}'`)
-                        .w3-container.w3-white(style="padding: 16px")
-                            if post.files && post.files.length > 0
-                                each file in post.files
-                                    if file.type && file.type.startsWith('image/')
-                                        img.w3-image(src=file.path alt=file.filename style="width:100%")
-                                    else if file.type && file.type.startsWith('application/')
-                                        .w3-container.w3-padding
-                                            i.fa.fa-file-pdf.w3-text-red.w3-xlarge
-                                            span.w3-margin-left= file.filename
-                            h4= post.title || 'Untitled'
-                            p.w3-opacity= new Date(post.createdAt).toLocaleDateString()
-                            p= post.content || 'No content'
-                            .w3-row
-                                .w3-col
-                                    span.w3-text-grey Comments: #{(post.comments && post.comments.length) || 0}
-                            .w3-bar
-                                button.w3-bar-item.w3-button.w3-blue(onclick=`event.stopPropagation(); editPost('${post._id}')`)
-                                    i.fa.fa-edit
-                                button.w3-bar-item.w3-button.w3-red(onclick=`event.stopPropagation(); deletePost('${post._id}')`)
-                                    i.fa.fa-trash
+                    .w3-card.w3-round-large.w3-white.w3-hover-shadow(style="transition: all 0.3s;" onmouseover="this.style.boxShadow='0 8px 16px 0 rgba(0,0,0,0.2)'" onmouseout="this.style.boxShadow='0 4px 8px 0 rgba(0,0,0,0.1)'" onclick=`window.location.href='/admin/post/${post._id}'`)
+                        if post.files && post.files.length > 0
+                            each file in post.files
+                                if file.type && file.type.startsWith('image/')
+                                    .w3-display-container(style="height: 180px; overflow: hidden")
+                                        img.w3-image(src=file.path alt=file.filename style="width:100%; height:100%; object-fit: cover")
+                                        if post.isPublic
+                                            .w3-tag.w3-green.w3-round.w3-display-topright.w3-margin Public
+                                        else
+                                            .w3-tag.w3-blue.w3-round.w3-display-topright.w3-margin Private
+                                else if file.type && file.type.startsWith('application/')
+                                    .w3-container.w3-padding-16.w3-light-grey
+                                        i.fa.fa-file-pdf.w3-text-red.w3-xxlarge
+                                        span.w3-margin-left.w3-large= file.filename
+                                        if post.isPublic
+                                            .w3-tag.w3-green.w3-round.w3-right.w3-margin-top Public
+                                        else
+                                            .w3-tag.w3-blue.w3-round.w3-right.w3-margin-top Private
+                        else
+                            .w3-container.w3-padding-16.w3-light-grey(style="height: 100px")
+                                i.fa.fa-file-alt.w3-text-grey.w3-xxlarge
+                                if post.isPublic
+                                    .w3-tag.w3-green.w3-round.w3-right.w3-margin-top Public
+                                else
+                                    .w3-tag.w3-blue.w3-round.w3-right.w3-margin-top Private
+                        
+                        .w3-container.w3-padding-16
+                            p.w3-xlarge.w3-text-dark-grey(style="margin-top:0")= post.title || 'Untitled'
+                            p.w3-opacity
+                                i.fa.fa-calendar.w3-margin-right
+                                = new Date(post.createdAt).toLocaleDateString('pt-PT')
+                            p.w3-text-grey= post.content ? (post.content.length > 100 ? post.content.substring(0, 100) + '...' : post.content) : 'No content'
+                            
+                            .w3-row.w3-margin-top
+                                .w3-col.s6
+                                    span.w3-tag.w3-round.w3-light-grey
+                                        i.fa.fa-comments.w3-margin-right
+                                        = (post.comments && post.comments.length) || 0
+                                .w3-col.s6.w3-right-align
+                                    button.w3-button.w3-round.w3-blue.w3-hover-dark-blue.w3-margin-right(onclick=`event.stopPropagation(); editPost('${post._id}')` style="transition: all 0.3s")
+                                        i.fa.fa-edit
+                                    button.w3-button.w3-round.w3-red.w3-hover-dark-red(onclick=`event.stopPropagation(); deletePost('${post._id}')` style="transition: all 0.3s")
+                                        i.fa.fa-trash
 
 block scripts
     script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")

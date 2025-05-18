@@ -8,60 +8,58 @@ block content
                 span.w3-button.w3-display-topright(onclick="this.parentElement.style.display='none'") &times;
                 h3 Error!
                 p= error
-        form.w3-container(action="/admin/addpost" method="POST" enctype="multipart/form-data")
-            .w3-margin
-                label(for="title") Title
-                input.w3-input.w3-border#title(type="text" name="title" required)
+                
+        .w3-bar.w3-border.w3-light-grey
+            button.w3-bar-item.w3-button.tab-button Upload SIP Package
+        
+        .w3-container.tab-content
+            .w3-panel.w3-pale-blue.w3-leftbar.w3-border-blue
+                p 
+                    strong SIP Package Upload
+                p Upload a Submission Information Package (SIP) ZIP file containing your diary entry with all its files and metadata in a structured format.
+                p The ZIP file must contain a <code>manifesto-SIP.json</code> file at the root with the entry metadata and references to included files.
             
-            .w3-margin
-                label(for="content") Content
-                textarea.w3-input.w3-border#content(name="content" rows="6" required)
-            
-            .w3-margin
-                label(for="tags") Select Tags
-                select.w3-select.select2-tags#tags(name="tags[]" multiple="multiple" style="width: 100%")
-                    option(value="travel") Travel
-                    option(value="food") Food & Cuisine
-                    option(value="culture") Culture
-                    option(value="reflection") Personal Reflection
-                    option(value="nature") Nature
-                    option(value="learning") Learning Experience
-                    option(value="friends") Friends & People
-                    option(value="challenges") Challenges
-                    option(value="achievement") Achievement
-                    option(value="work") Work Experience
-                    option(value="family") Family
-                    option(value="memories") Memories
-            
-            .w3-margin
-                input.w3-check#isPublic(type="checkbox" name="isPublic")
-                label.w3-padding-small(for="isPublic") Make this post public
-            
-            .w3-margin
-                label(for="files") Attach Files
-                input.w3-input.w3-border#files(type="file" name="files" multiple)
-            
-            .w3-margin.w3-right-align
-                button.w3-button.w3-light-grey.w3-margin-right(type="reset") Clear
-                button.w3-button.w3-blue(type="submit") Save Entry
+            form.w3-container(action="/admin/add/post" method="POST" enctype="multipart/form-data")
+                .w3-margin
+                    label(for="sipFile") Upload SIP Package (.zip)
+                    input.w3-input.w3-border#sipFile(type="file" name="sipFile" accept=".zip,application/zip,application/x-zip-compressed" required)
+                
+                .w3-margin
+                    details.w3-border.w3-padding
+                        summary.w3-hover-light-grey(style="cursor: pointer") SIP Format Specifications
+                        .w3-container.w3-padding
+                            h4 Required Structure
+                            p Your ZIP file should contain:
+                            ul
+                                li 
+                                    strong manifesto-SIP.json
+                                    |  - The metadata file with entry details
+                                li All files referenced in the manifest
+                            
+                            h4 Sample Manifest Format
+                            pre.w3-code.w3-border.w3-light-grey(style="overflow-x: auto;")
+                                | {
+                                |   "title": "My Diary Entry",
+                                |   "content": "The content of the diary entry...",
+                                |   "tags": ["travel", "nature"],
+                                |   "isPublic": true,
+                                |   "createdAt": "2023-08-15T14:30:00Z",
+                                |   "files": [
+                                |     {
+                                |       "path": "images/photo1.jpg",
+                                |       "type": "image/jpeg"
+                                |     },
+                                |     {
+                                |       "path": "documents/notes.pdf", 
+                                |       "type": "application/pdf"
+                                |     }
+                                |   ]
+                                | }
+                
+                .w3-margin.w3-right-align
+                    button.w3-button.w3-light-grey.w3-margin-right(type="reset") Clear
+                    button.w3-button.w3-blue(type="submit") Upload SIP
 
 block scripts
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js")
-    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css")
-    
-    script.
-        $(document).ready(function() {
-            $('#tags').select2({
-                placeholder: "Choose your tags...",
-                allowClear: true,
-                tags: false,
-                tokenSeparators: [','],
-                width: 'resolve'
-            });
-            
-            $('button[type="reset"]').click(function() {
-                $('#tags').val(null).trigger('change');
-            });
-            console.log(tags)
-        });

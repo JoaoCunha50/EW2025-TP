@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const DiaryContent = require('../controllers/diaryContent');
+const  { isAuthenticated } = require('../middleware/auth')
 
 router.get('/', async (req, res) => {
     try {
