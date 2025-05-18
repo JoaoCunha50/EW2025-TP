@@ -3,66 +3,118 @@ extends layout
 block content
     .w3-container.w3-padding-32
         if error 
-            .w3-panel.w3-red.w3-display-container.w3-margin-bottom
+            .w3-panel.w3-red.w3-display-container.w3-round-large.w3-margin-bottom
                 span.w3-button.w3-display-topright(onclick="this.parentElement.style.display='none'") &times;
                 h3 Error!
                 p= error
 
-        .w3-card.w3-white
-            .w3-container.w3-padding
-                if post.files && post.files.length > 0
-                    .w3-row-padding.w3-margin-bottom
-                        each file in post.files
-                            if file.type && file.type.startsWith('image/')
-                                .w3-col.s12.w3-margin-bottom
-                                    img.w3-image(src=file.path alt=file.filename style="width:100%")
-                            else if file.type && file.type.startsWith('application/')
-                                .w3-col.s12.w3-margin-bottom
-                                    .w3-container.w3-padding.w3-light-grey
-                                        i.fa.fa-file-pdf.w3-text-red.w3-xlarge
-                                        a.w3-margin-left(href=file.path target="_blank")= file.filename
-
+        .w3-card.w3-white.w3-round-large(style="box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width:800px; margin:auto; padding: 10px")
+            .w3-container.w3-padding(style="padding: 10px")
                 if isAdmin
-                    input#title.w3-input.w3-border.w3-margin-bottom(type="text" value=post.title name="title")
-                    textarea#content.w3-input.w3-border.w3-margin-bottom(name="content" rows="4")= post.content
-                    input#files.w3-input.w3-border.w3-margin-bottom(type="file" name="files" multiple)
+                    a Title
+                    .w3-row.w3-margin-bottom
+                        .w3-col.s12
+                            input#title.w3-input.w3-border.w3-round-large(type="text" value=post.title name="title" style="border-color:#d1d5db; padding:8px 12px")
+                    a Content
+                    .w3-row.w3-margin-bottom
+                        .w3-col.s12
+                            textarea#content.w3-input.w3-border.w3-round-large(name="content" rows="4" style="border-color:#d1d5db; padding:8px 12px")= post.content
+                    
+                    .w3-row.w3-margin-bottom
+                        .w3-col.s12
+                            label.w3-checkbox
+                                input#isPublic.w3-check(type="checkbox" name="isPublic" checked=post.isPublic)
+                                span.w3-checkmark(style="background-color:#e5e7eb; border-color:#d1d5db")
+                                |  Pública
+                    
+                    .w3-row.w3-margin-bottom
+                        .w3-col.s12
+                            label(style="display:block; margin-bottom:8px") Adicionar novos ficheiros:
+                            input#files.w3-input.w3-border.w3-round-large(type="file" name="files" multiple style="border-color:#d1d5db; padding:8px")
+                            
+                            if post.files && post.files.length > 0
+                                .w3-margin-top
+                                    label(style="display:block; margin-bottom:8px") Ficheiros existentes:
+                                    each file in post.files
+                                        .w3-container.w3-padding-small.w3-round-large(style="background:#f5f7fa; margin-bottom:8px")
+                                            if file.type && file.type.startsWith('image/')
+                                                .w3-row
+                                                    .w3-col
+                                                        i.fa.fa-image.w3-text-blue
+                                                        a(href=file.path target="_blank")= file.filename
+                                                        button.w3-button(onclick=`deleteFile('${post._id}','${file.filename}')`)
+                                                            i.fa.fa-trash
+                                            else
+                                                .w3-row
+                                                    .w3-col
+                                                        i.fa.fa-file-pdf.w3-text-red(style="margin-right: 10px")
+                                                        a(href=file.path target="_blank")= file.filename
+                                                        button.w3-button(onclick=`deleteFile('${post._id}','${file.filename}')`)
+                                                            i.fa.fa-trash
                 else
-                    h2= post.title || 'Untitled'
-                    p= post.content || 'No content'
+                    p.w3-xlarge(style="color:#1f2937")= post.title || 'Untitled'
+                    p(style="color:#4b5563")= post.content || 'No content'
+                    if post.isPublic
+                        span.w3-tag.w3-round-large(style="background:#10b981") Public
 
-                .w3-row.w3-padding-small.w3-opacity
-                    .w3-col.s6
+                .w3-row.w3-padding-small(style="margin-top: 10px")
+                    .w3-col.s12
                         span
-                            i.fa.fa-calendar.w3-margin-right
+                            i.fa.fa-calendar.w3-margin-right.w3-text-blue
                             | #{new Date(post.createdAt).toLocaleDateString('pt-PT')}
 
-            .w3-container.w3-padding.w3-light-grey
-                h3 Comments
+                if !isAdmin && post.files && post.files.length > 0
+                    .w3-row.w3-margin-top
+                        .w3-col
+                            .w3-container.w3-padding.w3-round-large(style="background:#f5f7fa")
+                                h4(style="color:#1f2937; margin-top:0") Ficheiros Anexados
+                                each file in post.files
+                                    .w3-panel.w3-white.w3-round-large(style="padding:12px; margin:8px 0; box-shadow:0 1px 3px rgba(0,0,0,0.1)")
+                                        if file.type && file.type.startsWith('image/')
+                                            i.fa.fa-image.w3-text-blue.w3-margin-right
+                                        else
+                                            i.fa.fa-file-pdf.w3-text-red.w3-margin-right
+                                        a(href=file.path target="_blank")= file.filename
+                            .w3-padding-16
+                                a.w3-button.w3-round-large(href=`/download/${post._id}` style="background:#3b82f6; color:white; padding:8px 16px")
+                                    i.fa.fa-download.w3-margin-right
+                                    | Download
+
+            .w3-container.w3-padding.w3-round-large(style="background:#f5f7fa; margin-top:10px; margin-left: 16px; margin-right: 16px; margin-bottom: 10px")
+                h3(style="color:#1f2937") Comments
                 if post.comments && post.comments.length > 0
                     each comment in post.comments
-                        .w3-container.w3-white.w3-margin-bottom.w3-round
-                            p.w3-opacity-min= comment.author
-                            p= comment.content
-                            p.w3-tiny.w3-opacity= new Date(comment.date).toLocaleDateString('pt-PT')
+                        .w3-container.w3-white.w3-margin-bottom.w3-round-large(style="box-shadow:0 1px 3px rgba(0,0,0,0.1); padding:12px")
+                            p.w3-opacity-min(style="color:#6b7280; margin:0")= comment.author
+                            p(style="color:#4b5563; margin:8px 0")= comment.content
+                            p.w3-tiny.w3-opacity(style="color:#9ca3af; margin:0")= new Date(comment.date).toLocaleDateString('pt-PT')
                 else
-                    p.w3-opacity No comments yet
+                    p.w3-opacity(style="color:#9ca3af; padding: 12px") No comments yet
 
             if isAdmin
                 .w3-bar.w3-padding
-                    button.w3-bar-item.w3-button.w3-blue(onclick=`submitEdit(${JSON.stringify(post)})`)
+                    button.w3-button.w3-round-large(onclick=`submitEdit(${JSON.stringify(post)})` style="background:#3b82f6; color:white; padding:8px 16px")
                         i.fa.fa-edit.w3-margin-right
-                        | Edit
+                        | Save Changes
 
-                    button.w3-bar-item.w3-button.w3-red(onclick=`deletePost('${post._id}')`)
+                    button.w3-button.w3-round-large(onclick=`deletePost('${post._id}')` style="background:#ef4444; color:white; margin-left:16px; padding:8px 16px")
                         i.fa.fa-trash.w3-margin-right
-                        | Delete
+                        | Delete Post
 
                 if authenticated
-                    .w3-container.w3-padding-16
-                        textarea.w3-input.w3-border.w3-margin-bottom(placeholder="Add a comment..." rows="2")
-                        button.w3-button.w3-blue Post Comment
+                    .w3-container.w3-padding-16(style="max-width:600px; margin:0 auto")
+                        textarea.w3-input.w3-border.w3-round-large(placeholder="Add a comment..." rows="2" style="border-color:#d1d5db; padding:8px 12px")
+                        button.w3-button.w3-round-large(style="background:#3b82f6; color:white; margin-top:8px; padding:8px 16px") Post Comment
 
 block scripts
     script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
     if isAdmin
         script(src="/javascripts/posts.js")
+        script.
+            function deleteFile(postId, filename) {
+                if(confirm('Tem a certeza que deseja remover este ficheiro?')) {
+                    axios.delete(`/admin/post/${postId}/files`, { data: { filename } })
+                        .then(response => window.location.reload())
+                        .catch(error => alert('Error deleting file'));
+                }
+            }

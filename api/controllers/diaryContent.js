@@ -14,6 +14,7 @@ module.exports.getOne = (id) => {
 
 module.exports.create = (entry) => {
     const newEntry = new DiaryContent({
+        producer: entry.producer,
         title: entry.title,
         content: entry.content,
         createdAt: new Date(),

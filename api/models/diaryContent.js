@@ -14,6 +14,7 @@ var commentSchema = new mongoose.Schema({
 }, { _id: false });
 
 var diaryContentSchema = new mongoose.Schema({
+    producer: String,
     title: String,
     content: String,
     createdAt: Date,

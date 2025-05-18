@@ -10,24 +10,3 @@ exports.isAdmin = (req, res, next) => {
     message: 'Acesso negado. Permissão de administrador necessária.'
   });
 };
-
-exports.getCurrentUser = (req, res, next) => {
-  passport.authenticate('jwt', { session: false }, (err, user, info) => {
-    if (err) return next(err);
-    
-    // Se houver um utilizador autenticado, adicione-o ao objeto de solicitação
-    if (user) {
-      req.user = user;
-    }
-    
-    next();
-  })(req, res, next);
-};
-
-exports.checkAccess = (publicAccess = false) => {
-  if (publicAccess) {
-    return exports.getCurrentUser;
-  } else {
-    return exports.isAuthenticated;
-  }
-};

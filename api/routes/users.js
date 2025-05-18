@@ -20,7 +20,8 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/:email', 
-  auth.isAuthenticated, 
+  auth.isAuthenticated,
+  auth.isAdmin, 
   function(req, res, next) {
     User.findByEmail(req.params.email)
       .then(data => {
@@ -34,6 +35,7 @@ router.get('/:email',
 
 router.delete('/:email', 
   auth.isAuthenticated,
+  auth.isAdmin,
   function(req, res, next) {
     if (req.user.role === 'admin' || req.user.email === req.params.email) {
       User.removeUser(req.params.email)

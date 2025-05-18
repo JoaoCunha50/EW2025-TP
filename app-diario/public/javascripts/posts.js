@@ -8,6 +8,7 @@ async function submitEdit(post) {
             const titleElement = document.getElementById('title');
             const contentElement = document.getElementById('content');
             const fileInput = document.getElementById('files');
+            const isPublicElement = document.getElementById('isPublic')
             
             if (!titleElement || !contentElement) {
                 throw new Error('Elementos do formulário não encontrados');
@@ -18,6 +19,10 @@ async function submitEdit(post) {
 
             if(contentElement) {
                 post.content = contentElement.value
+            }
+
+            if(isPublicElement) {
+                post.isPublic = isPublicElement.checked
             }
 
             const response = await axios.put(`http://localhost:3000/api/diary/${post._id}`, post);
@@ -36,11 +41,15 @@ async function submitEdit(post) {
 async function deletePost(id) {
     if (confirm('Tem certeza de que deseja excluir este post?')) {
         try {
-            const response = await axios.delete(`http://localhost:3000/api/diary/${id}`);
-            
-            if (response.status === 200) {
-                alert('Post excluído com sucesso!');
-                window.location.reload();
+            const responseFiles = await axios.delete(`http://localhost:8080/admin/delete/post/${id}`)
+
+            if(responseFiles.status === 200) {
+                const response = await axios.delete(`http://localhost:3000/api/diary/${id}`);
+                
+                if (response.status === 200) {
+                    alert('Post excluído com sucesso!');
+                    window.location.reload();
+                }
             }
         } catch (error) {
             console.error('Erro ao excluir post:', error);
