@@ -40,12 +40,11 @@ app.use(session({
   cookie: { secure: false }
 }));
 
-// Iniciar o Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api/users', usersRouter);
-app.use('/api/auth', authRouter);
+app.use('/auth', authRouter);
 app.use('/api/diary', diaryRouter);
 
 // catch 404 and forward to error handler

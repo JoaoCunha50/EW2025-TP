@@ -54,8 +54,21 @@ function extractZip(zipPath, options) {
     });
 }
 
+const tags = {
+    experiences,
+    adventures,
+    food,
+    places,
+    studies,
+    literature
+}
+
 module.exports = {
     validateManifestFiles,
     processFiles,
-    extractZip
+    extractZip,
+    tags,
+    local: {
+        secret: 'ew2025'
+    }
 };

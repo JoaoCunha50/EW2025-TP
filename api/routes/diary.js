@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const DiaryContent = require('../controllers/diaryContent');
-const  { isAuthenticated } = require('../middleware/auth')
+const  { isAuthenticated, isAdmin } = require('../middleware/auth')
 
 router.get('/', async (req, res) => {
     try {
@@ -26,7 +26,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', isAuthenticated, isAdmin, async (req, res) => {
     try {
         const entry = await DiaryContent.create(req.body);
         res.status(201).json(entry);
@@ -45,7 +45,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isAuthenticated, isAdmin, async (req, res) => {
     try {
         const entry = await DiaryContent.delete(req.params.id);
         if (!entry) return res.status(404).json({ error: 'Entry not found' });
@@ -55,7 +55,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.post('/:id/comments', async (req, res) => {
+router.post('/:id/comments', isAuthenticated, async (req, res) => {
     try {
         const entry = await DiaryContent.addComment(req.params.id, {
             user: req.body.user,

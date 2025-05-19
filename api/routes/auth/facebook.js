@@ -25,11 +25,6 @@ passport.authenticate('facebook', { session: false, failureRedirect: '/login' })
                 secure: false
             });
 
-            res.cookie('user', JSON.stringify(userData), {
-                httpOnly: true,
-                secure: false
-            });
-
             res.redirect(`http://localhost:8080/auth/facebook/callback`);
         } catch (error) {
             console.error('Error in Google callback:', error);
