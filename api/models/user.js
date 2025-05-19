@@ -12,16 +12,8 @@ var userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
-    // Campos para autenticação do Facebook
-    facebook: {
-        id: String,
-        token: String
-    },
-    // Campos para autenticação do Google
-    google: {
-        id: String,
-        token: String
-    }
+    facebookId: String,
+    googleId: String
 }, { versionKey: false });
 
 userSchema.pre('save', async function(next) {

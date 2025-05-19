@@ -15,7 +15,7 @@ block content
                     .w3-col.s8.w3-half
                         h3.w3-text-black(style="text-shadow: 1px 1px 3px rgba(0,0,0,0.3)")= "Francisco Castro"
                         h5.w3-text-black.w3-opacity= "Administrator"
-                button.w3-button.w3-round-large.w3-red.w3-hover-red.w3-margin-top(onclick="logout()" style="transition: transform 0.3s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                button.w3-button.w3-round-large.w3-red.w3-hover-red.w3-margin-top(onclick="window.location.href='/logout'" style="transition: transform 0.3s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
                         i.fa.fa-sign-out.w3-margin-right
                         | Logout
 
@@ -30,14 +30,14 @@ block content
                                     i.fa.fa-users.w3-jumbo
                                 .w3-right
                                     h4 Total Users
-                                    h2.w3-xxlarge= totalUsers || 0
+                                    h2.w3-xxlarge= totalUsers
                         .w3-half.w3-margin-bottom
                             .w3-container.w3-round-large.w3-padding-24(style="background: linear-gradient(to right, #00d2ff 0%, #3a7bd5 100%); color: white")
                                 .w3-left
                                     i.fa.fa-file-alt.w3-jumbo
                                 .w3-right
                                     h4 Total Posts
-                                    h2.w3-xxlarge= totalPosts || 0
+                                    h2.w3-xxlarge= posts.length
 
         .w3-container.w3-margin-bottom.w3-card.w3-round-large.w3-white
             .w3-bar
@@ -79,9 +79,9 @@ block content
                                     .w3-tag.w3-blue.w3-round.w3-right.w3-margin-top Private
                         
                         .w3-container.w3-padding-16
-                            p.w3-xlarge.w3-text-dark-grey(style="margin-top:0")= post.title || 'Untitled'
-                            p.w3-opacity
-                                i.fa.fa-calendar.w3-margin-right
+                            p.w3-xlarge(style="margin-top:0")= post.title || 'Untitled'
+                            p
+                                i.fa.fa-calendar.w3-text-blue.w3-margin-right
                                 = new Date(post.createdAt).toLocaleDateString('pt-PT')
                             p.w3-text-grey= post.content ? (post.content.length > 100 ? post.content.substring(0, 100) + '...' : post.content) : 'No content'
                             
@@ -98,6 +98,4 @@ block content
 
 block scripts
     script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js")
-    script(src="/javascripts/logout.js")
     script(src="/javascripts/posts.js")

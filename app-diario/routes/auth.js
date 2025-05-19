@@ -11,26 +11,20 @@ router.get('/facebook', async(req, res) => {
 
 router.get('/facebook/callback', (req, res) => {
     try {
-        const userCookie = req.cookies.user;
         const token = req.cookies.token;
         
-        if (!userCookie || !token) {
+        if (!token) {
             return res.render('login', {
                 title: 'Login',
                 error: 'Authentication failed - missing data'
             });
         }
         
-        const user = JSON.parse(userCookie);
+        return res.redirect('/diario');
         
-        if (user.role === 'admin') {
-            res.redirect('/admin');
-        } else {
-            res.redirect('/profile');
-        }
     } catch (error) {
         console.error('Error processing Google callback on frontend:', error);
-        res.render('login', {
+        return res.render('login', {
             title: 'Login',
             error: 'Authentication failed'
         });
@@ -39,26 +33,19 @@ router.get('/facebook/callback', (req, res) => {
 
 router.get('/google/callback', (req, res) => {
     try {
-        const userCookie = req.cookies.user;
         const token = req.cookies.token;
 
-        if (!userCookie || !token) {
+        if (!token) {
             return res.render('login', {
                 title: 'Login',
                 error: 'Authentication failed - missing data'
             });
         }
 
-        const user = JSON.parse(userCookie);
-
-        if (user.role === 'admin') {
-            res.redirect('/admin');
-        } else {
-            res.redirect('/profile');
-        }
+        return  res.redirect('/diario');
     } catch (error) {
         console.error('Error processing Google callback on frontend:', error);
-        res.render('login', {
+        return res.render('login', {
             title: 'Login',
             error: 'Authentication failed'
         });

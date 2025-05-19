@@ -1,5 +1,4 @@
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -16,7 +15,7 @@ passport.use(new FacebookStrategy({
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      let user = await User.findOne({ 'facebook.id': profile.id });
+      let user = await User.findOne({ 'facebookId': profile.id });
       if (user) {
         return done(null, user);
       }
@@ -27,10 +26,7 @@ passport.use(new FacebookStrategy({
         
         if (user) {
           // Atualizar com ID do Facebook
-          user.facebook = {
-            id: profile.id,
-            token: accessToken
-          };
+          user.facebookId =  profile.id
           await user.save();
           return done(null, user);
         }
@@ -41,10 +37,7 @@ passport.use(new FacebookStrategy({
         email: profile._json.email ? profile._json.email : '',
         name: profile.displayName,
         username: profile.id,
-        facebook: {
-          id: profile.id,
-          token: accessToken
-        },
+        facebookId: profile.id,
         password: Math.random().toString(36).slice(-8),
         biography: '...'
       });
@@ -65,7 +58,7 @@ passport.use(new GoogleStrategy({
   },
   async (token, tokenSecret, profile, done) => {
     try {
-      let user = await User.findOne({ 'google.id': profile.id });
+      let user = await User.findOne({ 'googleId': profile.id });
       
       if (user) {
         return done(null, user);
@@ -77,24 +70,17 @@ passport.use(new GoogleStrategy({
         
         if (user) {
           // Atualizar com ID do Google
-          user.google = {
-            id: profile.id,
-            token: token
-          };
+          user.googleID = profile.id
           await user.save();
           return done(null, user);
         }
       }
       
-      // Criar novo utilizador se não existir
       const newUser = new User({
         email: profile.emails[0].value,
         name: profile.displayName,
         username: profile.id,
-        google: {
-          id: profile.id,
-          token: token
-        },
+        googleId: profile.id,
         password: Math.random().toString(36).slice(-8),
         biography: '...'
       });

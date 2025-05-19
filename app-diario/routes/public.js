@@ -10,6 +10,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/login', function(req, res) {
+    res.clearCookie('token')
     res.render('login', { title: 'Diário - Login' });
 });
 
@@ -112,7 +113,7 @@ router.get('/download/:id', async function(req, res) {
 
 router.get('/diario', async function(req, res) {
     try{
-        const authenticated = req.cookies === null || req.cookies.user === null || req.cookies.token === null
+        const authenticated = req.cookies.token != null
         const response = await axios.get('http://api:3000/api/diary?isPublic=true')
         var posts = response.data
     
@@ -190,6 +191,11 @@ router.post('/login', async function(req, res) {
             error: 'Invalid credentials'
         });
     }
+});
+
+router.get('/logout', function(req, res) {
+    res.clearCookie('token');
+    return res.redirect('/');
 });
 
 module.exports = router;

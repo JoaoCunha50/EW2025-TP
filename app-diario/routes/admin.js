@@ -14,19 +14,37 @@ const {
 } = require('../utils/multerConfig');
 
 router.get('/login', function(req, res) {
+  res.clearCookie('token')
   res.render('adminLogin', { title: 'Admin - Login' });
 });
 
 router.get('/', isAdmin, async function(req, res) {
-  try{
-    const response = await axios.get('http://api:3000/api/diary')
-    var posts = response.data
+    try {
+      const config = {
+        headers: {
+            'Authorization': `Bearer ${req.cookies.token}`
+        }
+      };
+        const [postsResponse, usersResponse] = await Promise.all([
+            axios.get('http://api:3000/api/diary', config),
+            axios.get('http://api:3000/api/users', config)
+        ]);
 
-    return res.render('adminDiario', { title: 'Admin - Dashboard', posts: posts});
-  } catch (error) {
-    console.error("Error:" + error);
-    return res.render('adminDiario', { title: 'Admin - Dashboard'})
-  }
+        return res.render('adminDiario', { 
+            title: 'Admin - Dashboard',
+            posts: postsResponse.data,
+            totalUsers: usersResponse.data.length,
+            error: null
+        });
+    } catch (error) {
+        console.error("Error:", error);
+        return res.render('adminDiario', { 
+            title: 'Admin - Dashboard',
+            posts: [],
+            totalUsers: 0,
+            error: 'Failed to fetch data from API'
+        });
+    }
 });
 
 router.get('/post/:id', isAdmin, async function(req, res) {
@@ -52,9 +70,7 @@ router.post('/add/post', isAdmin, uploadSip.single('sipFile'), handleMulterError
         error: 'No SIP file uploaded'
       });
     }
-
-    const userCookie = req.cookies.user;
-    const user = JSON.parse(userCookie);
+    const user = req.user;
 
     const zipFilePath = req.file.path;
     
@@ -144,7 +160,11 @@ router.delete('/delete/post/:id', isAdmin, async function(req, res) {
   try {
     const postId = req.params.id;
     
-    const postResponse = await axios.get(`http://api:3000/api/diary/${postId}`);
+    const postResponse = await axios.get(`http://api:3000/api/diary/${postId}`,{
+      headers: {
+        'Authorization': `Bearer ${req.cookies.token}`,
+      }
+    });
     const post = postResponse.data;
     
     if (post.files && post.files.length > 0) {
@@ -165,7 +185,7 @@ router.delete('/delete/post/:id', isAdmin, async function(req, res) {
 
 router.post('/login', async function(req, res, next) {
   try {
-      const response = await axios.post('http://api:3000/api/auth/admin/login', {
+      const response = await axios.post('http://api:3000/auth/admin/login', {
           email: req.body.email,
           password: req.body.password
       });
@@ -175,11 +195,9 @@ router.post('/login', async function(req, res, next) {
               httpOnly: true,
               secure: false
           });
-          res.cookie('user', JSON.stringify(response.data.user));
       
-          if (response.data.user.role === 'admin') {
-              return res.redirect('/admin');
-          } 
+          return res.redirect('/admin');
+
       } else {
           return res.render('adminLogin', {
               title: 'Login',
