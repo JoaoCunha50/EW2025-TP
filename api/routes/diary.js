@@ -35,7 +35,7 @@ router.post('/', isAuthenticated, isAdmin, async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', isAuthenticated, isAdmin, async (req, res) => {
     try {
         const entry = await DiaryContent.update(req.params.id, req.body);
         if (!entry) return res.status(404).json({ error: 'Entry not found' });

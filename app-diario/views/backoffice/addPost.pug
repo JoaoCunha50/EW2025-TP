@@ -18,6 +18,15 @@ block content
                     strong SIP Package Upload
                 p Upload a Submission Information Package (SIP) ZIP file containing your diary entry with all its files and metadata in a structured format.
                 p The ZIP file must contain a <code>manifesto-SIP.json</code> file at the root with the entry metadata and references to included files.
+                .w3-panel.w3-pale-yellow.w3-leftbar.w3-border-yellow(style="padding-bottom: 16px")
+                    p.w3-margin-top-0
+                        strong 
+                            i.fa.fa-exclamation-triangle.w3-text-yellow.w3-margin-right
+                            | Valid Tags
+                    p The Tags that you can include in your manifest are:
+                    ul 
+                    each tag in tags || []
+                        li= tag
             
             form.w3-container(action="/admin/add/post" method="POST" enctype="multipart/form-data")
                 .w3-margin
@@ -43,7 +52,6 @@ block content
                                 |   "content": "The content of the diary entry...",
                                 |   "tags": ["travel", "nature"],
                                 |   "isPublic": true,
-                                |   "createdAt": "2023-08-15T14:30:00Z",
                                 |   "files": [
                                 |     {
                                 |       "path": "images/photo1.jpg",

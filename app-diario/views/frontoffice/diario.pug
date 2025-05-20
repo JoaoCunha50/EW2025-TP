@@ -41,35 +41,50 @@ block content
                                     br
                                     span.w3-text-grey 200
 
-        // Posts Grid
         .w3-row-padding
             each post in posts || []
                 .w3-col.l4.m6.s12.w3-margin-bottom
-                    .w3-card.w3-white.w3-round-large.w3-hover-shadow(
-                        style="transition: all 0.3s"
-                        onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 8px 0 rgba(0,0,0,0.2)'"
-                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 4px 0 rgba(0,0,0,0.05)'"
+                    .w3-card.w3-round-large.w3-white.w3-hover-shadow(
+                        style="transition: all 0.3s;" 
+                        onmouseover="this.style.boxShadow='0 8px 16px 0 rgba(0,0,0,0.2)'; this.style.transform='scale(1.02)'" 
+                        onmouseout="this.style.boxShadow='0 4px 8px 0 rgba(0,0,0,0.1)'; this.style.transform='scale(1)'" 
                         onclick=`window.location.href='/post/${post._id}'`
                     )
-                        if post.files && post.files.length > 0
-                            each file in post.files
-                                if file.type && file.type.startsWith('image/')
-                                    .w3-display-container(style="height:180px;overflow:hidden")
-                                        img.w3-image(src=file.path alt=file.filename style="width:100%;height:100%;object-fit:cover")
-                                else if file.type && file.type.startsWith('application/')
-                                    .w3-container.w3-padding.w3-light-grey
-                                        i.fa.fa-file-pdf.w3-text-red.w3-xxlarge
-                                        span.w3-margin-left.w3-large= file.filename
+                        - const imageFiles = post.files ? post.files.filter(file => file.type && file.type.startsWith('image/')) : []
+                        - const docFiles = post.files ? post.files.filter(file => !file.type.startsWith('image/')) : []
+                        - const remainingFiles = (post.files.length > 0 ? post.files.length : 0) - (imageFiles.length > 0 ? 1 : 0) - (docFiles.length > 0 ? 1 : 0)
+
+                        if imageFiles.length > 0
+                            .w3-display-container(style="height: 180px; overflow: hidden")
+                                img.w3-image(src=imageFiles[0].path alt=imageFiles[0].filename style="width:100%; height:100%; object-fit: cover")
+                                if post.isPublic
+                                    .w3-tag.w3-teal.w3-round.w3-display-topright.w3-margin Public
+                                else
+                                    .w3-tag.w3-red.w3-round.w3-display-topright.w3-margin Private
+                        
+                        if docFiles.length > 0
+                            .w3-container.w3-padding-16.w3-light-grey(style="position: relative; border-top: 1px solid #ddd")
+                                i.fa.fa-file-pdf.w3-text-red.w3-xxlarge
+                                span.w3-margin-left.w3-large= docFiles[0].filename
+                                if remainingFiles > 0
+                                    span.w3-tag.w3-white.w3-round.w3-display-right.w3-margin-right +#{remainingFiles}
+                                if imageFiles.length === 0
+                                    if post.isPublic
+                                        .w3-tag.w3-teal.w3-round.w3-display-topright.w3-margin Public
+                                    else
+                                        .w3-tag.w3-red.w3-round.w3-display-topright.w3-margin Private
                         
                         .w3-container.w3-padding-16
-                            p.w3-xlarge(style="color:#1f2937;margin-top:0")= post.title || 'Untitled'
-                            p.w3-opacity= new Date(post.createdAt).toLocaleDateString('pt-PT')
+                            p.w3-xlarge(style="margin-top:0; color:#1f2937")= post.title || 'Untitled'
+                            p
+                                i.fa.fa-calendar.w3-text-blue.w3-margin-right
+                                = new Date(post.createdAt).toLocaleDateString('pt-PT')
                             p.w3-text-grey= post.content ? (post.content.length > 100 ? post.content.substring(0, 100) + '...' : post.content) : 'No content'
                             
                             .w3-row.w3-margin-top
                                 .w3-col.s6
                                     span.w3-tag.w3-round.w3-light-grey
-                                        i.fa.fa-comment.w3-margin-right
+                                        i.fa.fa-comments.w3-margin-right
                                         = (post.comments && post.comments.length) || 0
                                 .w3-col.s6.w3-right-align
                                     if post.isPublic
@@ -77,7 +92,6 @@ block content
                                     else
                                         span.w3-tag.w3-round.w3-light-grey Private
 
-        // Empty State
         if !posts || posts.length === 0
             .w3-container.w3-center.w3-padding-64
                 .w3-card.w3-white.w3-round-large.w3-padding-large(style="max-width:500px;margin:0 auto")

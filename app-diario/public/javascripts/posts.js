@@ -1,31 +1,41 @@
-function editPost(id) {
-    window.location.href = `/admin/post/${id}`;
-}
-
 async function submitEdit(post) {
     if (confirm('Deseja guardar alterações?')) {
         try {
             const titleElement = document.getElementById('title');
             const contentElement = document.getElementById('content');
-            const fileInput = document.getElementById('files');
-            const isPublicElement = document.getElementById('isPublic')
+            const fileInput = document.getElementById('file');
+            const isPublicElement = document.getElementById('isPublic');
             
-            if (!titleElement || !contentElement) {
-                throw new Error('Elementos do formulário não encontrados');
-            }
-            if(titleElement) {
-                post.title = titleElement.value
+
+            if (titleElement.value !== '') {
+                post.title = titleElement.value;
             }
 
-            if(contentElement) {
-                post.content = contentElement.value
+            if (contentElement.value !== '') {
+                post.content = contentElement.value;
             }
 
-            if(isPublicElement) {
-                post.isPublic = isPublicElement.checked
+            if (isPublicElement) {
+                post.isPublic = isPublicElement.checked;
             }
 
-            const response = await axios.put(`http://localhost:3000/api/diary/${post._id}`, post);
+            if (window.filesToDelete && window.filesToDelete.length > 0) {
+                post.filesToDelete = window.filesToDelete;
+            }
+
+            const formData = new FormData();
+
+            if (fileInput.files.length > 0) {
+                formData.append('file', fileInput.files[0]);
+            }
+
+            formData.append('post', JSON.stringify(post));
+
+            const response = await axios.put(`http://localhost:8080/admin/edit/post`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
 
             if (response.status === 200) {
                 window.location.href = '/admin';
@@ -41,15 +51,11 @@ async function submitEdit(post) {
 async function deletePost(id) {
     if (confirm('Tem certeza de que deseja excluir este post?')) {
         try {
-            const responseFiles = await axios.delete(`http://localhost:8080/admin/delete/post/${id}`)
-
-            if(responseFiles.status === 200) {
-                const response = await axios.delete(`http://localhost:3000/api/diary/${id}`);
+            const response = await axios.delete(`http://localhost:8080/admin/delete/post/${id}`)
                 
-                if (response.status === 200) {
-                    alert('Post excluído com sucesso!');
-                    window.location.reload();
-                }
+            if (response.status === 200) {
+                alert('Post excluído com sucesso!');
+                window.location.reload();
             }
         } catch (error) {
             console.error('Erro ao excluir post:', error);
