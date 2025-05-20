@@ -5,17 +5,46 @@ const {
     aipDir 
 } = require('../utils/multerConfig');
 
+const validTags = [
+    'experiences',
+    'travel',
+    'adventures',
+    'food',
+    'places',
+    'studies',
+    'literature',
+    'nature'
+];
+
 function validateManifestFiles(manifest, extractDir) {
+    if (!manifest.title || !manifest.content || manifest.isPublic === undefined) {
+        console.error('Missing required manifest fields');
+        return false;
+    }
+
+    if (manifest.tags && Array.isArray(manifest.tags)) {
+        for (const tag of manifest.tags) {
+            if (!validTags.includes(tag.toLowerCase())) {
+                console.error(`Invalid tag in manifest: ${tag}`);
+                return false;
+            }
+        }
+    }
+
     const files = Array.isArray(manifest.files) ? manifest.files : [];
-    
     for (const file of files) {
-        const filePath = path.join(extractDir, file.path || file);
-        if (!fs.existsSync(filePath)) {
-            console.error(`File referenced in manifest does not exist: ${file.path || file}`);
+        try {
+            const filePath = path.join(extractDir, file.path || file);
+            if (!fs.existsSync(filePath)) {
+                console.error(`File not found: ${filePath}`);
+                return false;
+            }
+        } catch (error) {
+            console.error(`Error checking file: ${error.message}`);
             return false;
         }
     }
-    
+
     return true;
 }
 
@@ -24,11 +53,14 @@ async function processFiles(manifest, extractDir) {
     fs.mkdirSync(storageDir, { recursive: true });
     
     const files = Array.isArray(manifest.files) ? manifest.files : [];
+
+    if(files.length >= 6) return []
+
     const processedFiles = [];
     
     for (const file of files) {
-        const srcPath = path.join(extractDir, file.path || file);
-        const fileName = path.basename(file.path || file);
+        const srcPath = path.join(extractDir, file.path);
+        const fileName = path.basename(file.path);
         const destPath = path.join(storageDir, fileName);
         
         fs.copyFileSync(srcPath, destPath);
@@ -54,20 +86,11 @@ function extractZip(zipPath, options) {
     });
 }
 
-const tags = {
-    experiences,
-    adventures,
-    food,
-    places,
-    studies,
-    literature
-}
-
 module.exports = {
     validateManifestFiles,
     processFiles,
     extractZip,
-    tags,
+    validTags,
     local: {
         secret: 'ew2025'
     }

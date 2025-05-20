@@ -4,9 +4,10 @@ const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
 const isAdmin = require('../middleware/auth');
-const { validateManifestFiles, processFiles, extractZip } = require('../utils/utils');
+const { validateManifestFiles, processFiles, extractZip, validTags } = require('../utils/utils');
 
-const { 
+const {
+  upload, 
   uploadSip, 
   handleMulterError, 
   tempDir, 
@@ -59,7 +60,54 @@ router.get('/post/:id', isAdmin, async function(req, res) {
 });
 
 router.get('/add/post', isAdmin, function(req, res) {
-  res.render('addPost', { title: "Add Post"});
+  res.render('addPost', { title: "Add Post", tags: validTags});
+});
+
+router.put('/edit/post', isAdmin, upload.single('file'), handleMulterError, async function(req, res) {
+  try {
+      const post = JSON.parse(req.body.post);
+      
+      if (!post.files) {
+          post.files = [];
+      }
+
+      if (post.filesToDelete && Array.isArray(post.filesToDelete)) {
+          for (const fileToDelete of post.filesToDelete) {
+              try {
+                  const filePath = path.join(publicDir, fileToDelete);
+                  if (fs.existsSync(filePath)) {
+                      fs.unlinkSync(filePath);
+                  }
+                
+                  post.files = post.files.filter(file => file.path !== fileToDelete);
+              } catch (error) {
+                  console.error(`Error deleting file ${fileToDelete}:`, error);
+              }
+          }
+      }
+
+      let storageDir = req.storageDir;
+      if (req.file) {
+          const newFile = {
+              filename: req.file.originalname,
+              path: `/uploads/AIP/${storageDir}/${req.file.originalname}`,
+              type: req.file.mimetype,
+              size: req.file.size
+          };
+          post.files.push(newFile);
+      }
+
+      const response = await axios.put(`http://api:3000/api/diary/${post._id}`, post, {
+          headers: {
+              'Authorization': `Bearer ${req.cookies.token}`
+          }
+      });
+
+      return res.status(200).json(response.data);
+  } catch (error) {
+      console.error('Error updating post:', error);
+      return res.status(500).json({ error: 'Failed to update post' });
+  }
 });
 
 router.post('/add/post', isAdmin, uploadSip.single('sipFile'), handleMulterError, async function(req, res) {
@@ -88,7 +136,8 @@ router.post('/add/post', isAdmin, uploadSip.single('sipFile'), handleMulterError
       
       return res.render('addPost', {
         title: 'Add Post',
-        error: 'Invalid SIP: Missing manifesto-SIP.json file'
+        error: 'Invalid SIP: Missing manifesto-SIP.json file',
+        tags: validTags
       });
     }
     
@@ -102,11 +151,11 @@ router.post('/add/post', isAdmin, uploadSip.single('sipFile'), handleMulterError
       
       return res.render('addPost', {
         title: 'Add Post',
-        error: 'Invalid SIP: The manifest file contains invalid JSON'
+        error: 'Invalid SIP: The manifest file contains invalid JSON',
+        tags: validTags
       });
     }
     
-    // Validate that all files referenced in the manifest exist
     const filesExist = validateManifestFiles(manifest, extractDir);
     
     if (!filesExist) {
@@ -114,7 +163,8 @@ router.post('/add/post', isAdmin, uploadSip.single('sipFile'), handleMulterError
       
       return res.render('addPost', {
         title: 'Add Post',
-        error: 'Invalid SIP: Not all files referenced in the manifest exist in the package'
+        error: 'Invalid SIP: Manifest file must follow the structure bellow and include both valid tags and files/images',
+        tags: validTags
       });
     }
     
@@ -122,11 +172,11 @@ router.post('/add/post', isAdmin, uploadSip.single('sipFile'), handleMulterError
     
     const formData = {
       producer: user.email,
-      title: manifest.title || 'Untitled Post',
-      content: manifest.content || '',
-      tags: manifest.tags || [],
+      title: manifest.title,
+      content: manifest.content,
+      tags: manifest.tags,
       isPublic: manifest.isPublic === true,
-      createdAt: manifest.createdAt ? new Date(manifest.createdAt) : new Date(),
+      createdAt: new Date(),
       files: files,
       comments: []
     };
@@ -144,14 +194,16 @@ router.post('/add/post', isAdmin, uploadSip.single('sipFile'), handleMulterError
     } else {
       return res.render('addPost', {
         title: 'Add Post',
-        error: 'Failed to create post'
+        error: 'Failed to create post',
+        tags: validTags
       });
     }
   } catch (error) {
     console.error('Error processing SIP:', error);
     return res.render('addPost', {
       title: 'Add Post',
-      error: 'An error occurred while processing the SIP: ' + error.message
+      error: 'An error occurred while processing the SIP: ' + error.message,
+      tags: validTags
     });
   }
 });
@@ -169,14 +221,24 @@ router.delete('/delete/post/:id', isAdmin, async function(req, res) {
     
     if (post.files && post.files.length > 0) {
       for (const file of post.files) {
-        fs.unlinkSync(path.join(publicDir, file.path));
         fs.rmSync(path.dirname(path.join(publicDir, file.path)),{ recursive: true, force: true })
+        break;
       }
-      
       console.log(`All files for post ${postId} have been deleted`);
     }
+
+    const response = await axios.delete(`http://api:3000/api/diary/${postId}`, {
+        headers: {
+          'Authorization': `Bearer ${req.cookies.token}`
+        } 
+    });
+
+    if(response.status === 200){
+      return res.status(200).json({ message: 'Files deleted successfully' });
+    } else {
+      throw new Error("Delete was not successfull")
+    }
     
-    return res.status(200).json({ message: 'Files deleted successfully' });
   } catch (error) {
     console.error('Error deleting post files:', error);
     return res.status(500).json({ error: 'Failed to delete post files' });
