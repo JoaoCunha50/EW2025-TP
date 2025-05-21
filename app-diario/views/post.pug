@@ -73,7 +73,7 @@ block content
                     .w3-col.s12
                         span
                             i.fa.fa-calendar.w3-margin-right.w3-text-blue
-                            | #{new Date(post.createdAt).toLocaleDateString('pt-PT')}
+                            | #{new Date(post.createdAt).toLocaleString('pt-PT').substring(0, 17)}
 
                 if !isAdmin && post.files && post.files.length > 0
                     .w3-row.w3-margin-top
