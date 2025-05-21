@@ -81,7 +81,7 @@ block content
                             p.w3-xlarge(style="margin-top:0")= post.title || 'Untitled'
                             p
                                 i.fa.fa-calendar.w3-text-blue.w3-margin-right
-                                = new Date(post.createdAt).toLocaleDateString('pt-PT')
+                                = new Date(post.createdAt).toLocaleString('pt-PT').substring(0, 17)
                             p.w3-text-grey= post.content ? (post.content.length > 100 ? post.content.substring(0, 100) + '...' : post.content) : 'No content'
                             
                             .w3-row.w3-margin-top
