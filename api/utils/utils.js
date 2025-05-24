@@ -79,11 +79,6 @@ async function validateManifestFiles(manifest, zip) {
             return false;
         }
 
-        if (manifest.isPublic === undefined || typeof manifest.isPublic !== 'boolean') {
-            console.error('Missing or invalid isPublic field in manifest');
-            return false;
-        }
-
         if (manifest.tags) {
             if (!Array.isArray(manifest.tags)) {
                 console.error('Tags field must be an array');
