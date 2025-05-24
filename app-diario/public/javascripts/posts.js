@@ -1,11 +1,10 @@
-async function submitEdit(post) {
+async function submitEdit(post, token) {
     if (confirm('Deseja guardar alterações?')) {
         try {
             const titleElement = document.getElementById('title');
             const contentElement = document.getElementById('content');
             const fileInput = document.getElementById('file');
             const isPublicElement = document.getElementById('isPublic');
-            
 
             if (titleElement.value !== '') {
                 post.title = titleElement.value;
@@ -31,8 +30,9 @@ async function submitEdit(post) {
 
             formData.append('post', JSON.stringify(post));
 
-            const response = await axios.put(`http://localhost:8080/admin/edit/post`, formData, {
+            const response = await axios.put(`http://localhost:3000/api/diary/${post._id}`, formData, {
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
                 }
             });

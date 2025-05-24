@@ -3,6 +3,7 @@ var DiaryContent = require('../models/diaryContent')
 module.exports.list = (query = {}) => {
     return DiaryContent
         .find(query)
+        .sort({ createdAt: -1 })
         .exec();
 }
 
@@ -17,7 +18,7 @@ module.exports.create = (entry) => {
         producer: entry.producer,
         title: entry.title,
         content: entry.content,
-        createdAt: new Date(),
+        createdAt: entry.createdAt || new Date(),
         isPublic: entry.isPublic || false,
         tags: entry.tags || [],
         files: entry.files || [],

@@ -2,11 +2,10 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const publicDir = path.join(__dirname, '../public');
+const filestorageDir = path.join(__dirname, '..', 'public', 'fileStorage');
 const tempDir = path.join(__dirname, '../temp');
-const aipDir = path.join(__dirname, '../public', 'uploads', 'AIP');
 
-[tempDir, aipDir].forEach(dir => {
+[tempDir, filestorageDir].forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -14,7 +13,7 @@ const aipDir = path.join(__dirname, '../public', 'uploads', 'AIP');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(aipDir, Date.now().toString())
+    const dir = path.join(filestorageDir, Date.now().toString())
     fs.mkdirSync(dir, { recursive: true });
     req.storageDir = path.basename(dir)
     cb(null, dir);
@@ -31,7 +30,6 @@ const sipStorage = multer.diskStorage({
   filename: (req, file, cb) => {
     const uniqueSuffix = new Date() + '-' + Math.round(Math.random() * 1E9);
     const zipFileName = 'sip -' + uniqueSuffix
-    cb(null, zipFileName);
 
     if (!req.zipInfo) req.zipInfo = {};
     req.zipInfo.filename = zipFileName;
@@ -80,26 +78,9 @@ const uploadSip = multer({
   }
 });
 
-const handleMulterError = (err, req, res, next) => {
-  if (err instanceof multer.MulterError) {
-    if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ error: 'Arquivo muito grande. Verifique o limite de tamanho.' });
-    }
-    if (err.code === 'LIMIT_FILE_COUNT') {
-      return res.status(400).json({ error: 'Número máximo de arquivos excedido.' });
-    }
-    return res.status(400).json({ error: `Erro no upload: ${err.message}` });
-  } else if (err) {
-    return res.status(400).json({ error: err.message });
-  }
-  next();
-};
-
 module.exports = {
   upload,
   uploadSip,
-  handleMulterError,
-  publicDir,
   tempDir,
-  aipDir
+  filestorageDir
 };

@@ -47,7 +47,7 @@ block content
                                                                 button.w3-button.w3-right.mark-delete-btn(data=file.path type="button")
                                                                     i.fa.fa-trash.w3-text-red
                                                                 i.fa.fa-file-pdf.w3-text-red(style="margin-right: 10px; margin-top: 10px; margin-left: 10px")
-                                                                a(href=file.path target="_blank" style="margin-top: 10px;")= file.filename
+                                                                a(href=file.url target="_blank" style="margin-top: 10px;")= file.filename
                                     
                                     .w3-container.w3-padding.w3-round-large(style="background:#f5f7fa; margin-bottom:16px;")
                                         h4(style="color:#1f2937; margin-top:0") Images
@@ -61,8 +61,8 @@ block content
                                                                 button.w3-button.w3-right.mark-delete-btn(data=file.path type="button")
                                                                     i.fa.fa-trash.w3-text-red
                                                             .w3-center
-                                                                a(href=file.path target="_blank")
-                                                                    img.w3-image(src=file.path alt=file.filename style="width: 100%; height: 150px; object-fit:cover;")
+                                                                a(href=file.url target="_blank")
+                                                                    img.w3-image(src=file.url alt=file.filename style="width: 100%; height: 150px; object-fit:cover;")
                 else
                     p.w3-xlarge(style="color:#1f2937")= post.title || 'Untitled'
                     p(style="color:#4b5563")= post.content || 'No content'
@@ -73,7 +73,7 @@ block content
                     .w3-col.s12
                         span
                             i.fa.fa-calendar.w3-margin-right.w3-text-blue
-                            | #{new Date(post.createdAt).toLocaleString('pt-PT').substring(0, 17)}
+                            | #{new Date(post.createdAt).toLocaleString('pt-PT', {timeZone:"Europe/Lisbon"}).substring(0, 17)}
 
                 if !isAdmin && post.files && post.files.length > 0
                     .w3-row.w3-margin-top
@@ -86,7 +86,7 @@ block content
                                             .w3-panel.w3-white.w3-round-large.w3-padding-16(style="padding:12px; margin:8px 0; box-shadow:0 1px 3px rgba(0,0,0,0.1)")
                                                 .w3-bar
                                                     i.fa.fa-file-pdf.w3-text-red(style="margin-right: 10px")
-                                                    a(href=file.path target="_blank")= file.filename
+                                                    a(href=file.url target="_blank")= file.filename
                             
 
                             if post.files.some(file => file.type && file.type.startsWith('image/'))
@@ -98,8 +98,8 @@ block content
                                                 .w3-bar
                                                     i.fa.fa-image.w3-text-blue(style="margin-right: 10px")
                                                 .w3-center
-                                                    a(href=file.path target="_blank")
-                                                        img.w3-image(src=file.path alt=file.filename style="width: 50%; height: 50%; object-fit:cover;")
+                                                    a(href=file.url target="_blank")
+                                                        img.w3-image(src=file.url alt=file.filename style="width: 50%; height: 50%; object-fit:cover;")
                             
                             .w3-padding-16
                                 a.w3-button.w3-round-large(href=`/download/${post._id}` style="background:#3b82f6; color:white; padding:8px 16px")
@@ -119,7 +119,7 @@ block content
 
             if isAdmin
                 .w3-bar.w3-padding
-                    button.w3-button.w3-round-large(onclick=`submitEdit(${JSON.stringify(post)})` style="background:#3b82f6; color:white; padding:8px 16px")
+                    button.w3-button.w3-round-large(onclick=`submitEdit(${JSON.stringify(post)}, ${JSON.stringify(token)})` style="background:#3b82f6; color:white; padding:8px 16px")
                         i.fa.fa-edit.w3-margin-right
                         | Save Changes
 
