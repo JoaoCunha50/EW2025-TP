@@ -93,8 +93,8 @@ router.post('/', isAuthenticated, isAdmin, uploadSip.single('sipFile'), async (r
             title: metadata.title,
             content: metadata.content,
             createdAt: new Date(),
-            isPublic: metadata.isPublic,
-            tags: metadata.tags || [],
+            isPublic: metadata.isPublic || false,
+            tags: metadata.tags,
             files: files,
             comments: []
         };
