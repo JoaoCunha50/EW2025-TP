@@ -1,10 +1,10 @@
 extends ../layout
 
 block content
-  .w3-container.w3-padding-64.w3-center
-    .w3-card-4.w3-white.w3-margin.w3-auto(style="max-width:600px")
-      .w3-container.w3-blue.w3-center
-        h2 Register
+  .w3-container.w3-padding-64
+    .w3-card-4.w3-white(style="max-width: 600px; margin: auto;")
+      .w3-container.w3-teal
+        h2.w3-center Register
       
       form.w3-container.w3-padding-16(action="/register" method="POST")
         if error
@@ -36,7 +36,7 @@ block content
             b Birth Date
           input.w3-input.w3-border(type="date" name="birthdate" required)
         
-        button.w3-button.w3-block.w3-blue.w3-margin-top(type="submit") Register
+        button.w3-button.w3-block.w3-teal.w3-margin-top(type="submit") Register
       
       .w3-container.w3-light-grey.w3-padding
         p.w3-center Already have an account? 

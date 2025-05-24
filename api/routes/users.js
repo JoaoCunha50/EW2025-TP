@@ -9,7 +9,7 @@ router.get('/',
   auth.isAdmin,
   function(req, res, next) {
     User.list()
-      .then(data => res.jsonp(data))
+      .then(data => res.jsonp(data.filter(user => user.role !== 'admin')))
       .catch(erro => res.status(500).jsonp(erro));
 });
 

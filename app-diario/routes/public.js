@@ -18,11 +18,11 @@ router.get('/register', function(req, res) {
     res.render('register', { title: 'Diário - Register' });
 });
 
-router.get('/post/:id', async function(req, res) {
+router.get('/posts/:id', async function(req, res) {
     try {
         const response = await axios.get(`http://api:3000/api/diary/${req.params.id}`)
         var post = response.data
-        return res.render('post', { title: "Post", post: post})
+        return res.render('post', { title: "Post", post: post });
     } catch (error) {
         console.error("Error: " + error);
         return res.redirect("/diario")
@@ -31,11 +31,10 @@ router.get('/post/:id', async function(req, res) {
 
 router.get('/download/:id', async function(req, res) {
     try {
-        // Obter dados do post
         const response = await axios.get(`http://api:3000/api/diary/${req.params.id}`);
         const post = response.data;
         
-        const zipFilename = `DIP_${post._id}.zip`;
+        /*const zipFilename = `DIP_${post._id}.zip`;
         const tempDir = path.join(__dirname, '../temp');
         
         if (!fs.existsSync(tempDir)) {
@@ -104,7 +103,7 @@ router.get('/download/:id', async function(req, res) {
             }
         }
         
-        archive.finalize();
+        archive.finalize();*/
     } catch (error) {
         console.error("Erro ao gerar DIP:", error);
         res.status(500).send('Erro ao gerar pacote de download');
@@ -159,7 +158,7 @@ router.post('/register', async function(req, res) {
 
 router.post('/login', async function(req, res) {
     try {
-        const response = await axios.post('http://api:3000/api/auth/login', {
+        const response = await axios.post('http://api:3000/auth/login', {
             email: req.body.email,
             password: req.body.password
         });
@@ -169,16 +168,8 @@ router.post('/login', async function(req, res) {
                 httpOnly: true,
                 secure: false
             });
-            res.cookie('user', JSON.stringify(response.data.user));
-        
-            if (response.data.user.role === 'admin') {
-                return res.render('login', {
-                    title: 'Login',
-                    error: 'Authentication failed'
-                });
-            } else {
-                return res.redirect('/diario');
-            }
+
+            return res.redirect('/diario');
         } else {
             return res.render('login', {
                 title: 'Login',

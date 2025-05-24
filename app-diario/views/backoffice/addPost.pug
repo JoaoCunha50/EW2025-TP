@@ -28,7 +28,7 @@ block content
                     each tag in tags || []
                         li= tag
             
-            form.w3-container(action="/admin/add/post" method="POST" enctype="multipart/form-data")
+            form#sipForm.w3-container(method="POST" enctype="multipart/form-data")
                 .w3-margin
                     label(for="sipFile") Upload SIP Package (.zip)
                     input.w3-input.w3-border#sipFile(type="file" name="sipFile" accept=".zip,application/zip,application/x-zip-compressed" required)
@@ -66,8 +66,45 @@ block content
                 
                 .w3-margin.w3-right-align
                     button.w3-button.w3-light-grey.w3-margin-right(type="reset") Clear
-                    button.w3-button.w3-blue(type="submit") Upload SIP
+                    button#submitBtn.w3-button.w3-blue(type="button" onclick="addPost()" disabled) Upload SIP
 
-block scripts
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js")
+block scripts 
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+    script. 
+        const token = !{JSON.stringify(token || null)};
+        const fileInput = document.getElementById('sipFile');
+        const submitBtn = document.getElementById('submitBtn');
+
+        fileInput.addEventListener('change', function() {
+            submitBtn.disabled = !this.files.length;
+        });
+
+        async function addPost() {
+            try {
+                const form = document.getElementById('sipForm');
+                const formData = new FormData(form);
+                
+                const response = await axios.post('http://localhost:3000/api/diary', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 201) {
+                    alert('SIP package uploaded successfully!');
+                    window.location.href = '/admin';
+                } else {
+                    throw new Error('Unexpected response status');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                
+                const submitBtn = document.querySelector('button[onclick="addPost()"]');
+                submitBtn.textContent = 'Upload SIP';
+                submitBtn.disabled = false;
+                
+                const errorMsg = error.response?.data?.error || error.message || 'Error uploading SIP package';
+                alert(errorMsg);
+            }
+        }
