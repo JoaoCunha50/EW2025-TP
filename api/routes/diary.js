@@ -6,6 +6,7 @@ const { upload, tempDir, filestorageDir, uploadSip } = require('../utils/multerC
 const { processZipFile } = require('../utils/utils');
 const path = require('path');
 const fs = require('fs');
+const archiver = require('archiver');
 
 const publicDir = path.join(__dirname, '..', 'public');
 
@@ -18,6 +19,7 @@ router.get('/', async (req, res) => {
         const entries = await DiaryContent.list(query);
         res.status(200).json(entries);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -28,6 +30,7 @@ router.get('/:id', async (req, res) => {
         if (!entry) return res.status(404).json({ error: 'Entry not found' });
         res.status(200).json(entry);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -37,6 +40,21 @@ router.get('/download/:id', async (req, res) => {
         const entry = await DiaryContent.getOne(req.params.id);
         if (!entry) return res.status(404).json({ error: 'Entry not found' });
 
+        const manifesto = {
+            title: entry.title,
+            content: entry.content,
+            createdAt: new Date(entry.createdAt).toLocaleString('pt-PT', {timeZone: 'Europe/Lisbon'}),
+            isPublic: entry.isPublic,
+            tags: entry.tags,
+            producer: entry.producer || 'Unknown Producer',
+            files: entry.files.map(file => ({
+                filename: file.filename,
+                path: (file.type && file.type.startsWith('image/') ? 'images/' : 'documents/') + file.filename,
+                url: file.url,
+                type: file.type,
+            }))
+        }
+
         const zipFilename = `DIP_${entry._id}.zip`;
         const tempDirPath = path.join(__dirname, '..', 'temp');
         
@@ -45,7 +63,7 @@ router.get('/download/:id', async (req, res) => {
         }
 
         const zipFilePath = path.join(tempDirPath, zipFilename);
-        const archive = require('archiver')('zip', { zlib: { level: 9 } });
+        const archive = archiver('zip', { zlib: { level: 9 } });
         const output = fs.createWriteStream(zipFilePath);
 
         output.on('close', () => {
@@ -59,10 +77,19 @@ router.get('/download/:id', async (req, res) => {
 
         archive.pipe(output);
 
-        archive.append(JSON.stringify(entry), { name: 'manifesto-SIP.json' });
+        archive.append(JSON.stringify(manifesto), { name: 'manifesto-DIP.json' });
 
         for (const file of entry.files) {
-            archive.file(path.join(publicDir, file.path), { name: file.filename });
+            let folderPath = '';
+            
+            if (file.type && file.type.startsWith('image/')) {
+                folderPath = 'images/';
+            } else if (file.type && file.type.startsWith('application/')) {
+                folderPath = 'documents/';
+            }
+            
+            const zipEntryName = folderPath + file.filename;
+            archive.file(path.join(publicDir, file.path), { name: zipEntryName });
         }
 
         archive.finalize();
@@ -150,16 +177,32 @@ router.put('/:id', isAuthenticated, isAdmin, upload.single('file'), async (req, 
         if (!entry) return res.status(404).json({ error: 'Entry not found' });
         res.status(200).json(entry);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 });
 
 router.delete('/:id', isAuthenticated, isAdmin, async (req, res) => {
     try {
+        const filesEntry = await DiaryContent.getOne(req.params.id);
+        if (!filesEntry) {
+            console.log(`Entry with ID ${req.params.id} not found`);
+            return res.status(404).json({ error: 'Entry not found' })
+        };
+        if (filesEntry.files && filesEntry.files.length > 0) {
+            for (const file of filesEntry.files) {
+                fs.rmSync(path.dirname(path.join(publicDir, file.path)),{ recursive: true, force: true })
+                break;
+            }
+            console.log(`All files for post ${req.params.id} have been deleted`);
+        }
+
         const entry = await DiaryContent.delete(req.params.id);
         if (!entry) return res.status(404).json({ error: 'Entry not found' });
+
         res.status(200).json({ message: 'Entry deleted successfully' });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -173,6 +216,7 @@ router.post('/:id/comments', isAuthenticated, async (req, res) => {
         if (!entry) return res.status(404).json({ error: 'Entry not found' });
         res.status(200).json(entry);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 });

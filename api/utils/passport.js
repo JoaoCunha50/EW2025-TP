@@ -94,7 +94,16 @@ passport.use(new GoogleStrategy({
 ));
 
 const opts = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromExtractors([
+    ExtractJwt.fromAuthHeaderAsBearerToken(),
+    (req) => {
+      let token = null;
+      if (req && req.cookies) {
+        token = req.cookies.token;
+      }
+      return token;
+    }
+  ]),
   secretOrKey: authConfig.local.secret
 };
 

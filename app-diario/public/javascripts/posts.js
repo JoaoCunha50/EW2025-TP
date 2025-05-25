@@ -1,4 +1,4 @@
-async function submitEdit(post, token) {
+async function submitEdit(post) {
     if (confirm('Deseja guardar alterações?')) {
         try {
             const titleElement = document.getElementById('title');
@@ -31,8 +31,8 @@ async function submitEdit(post, token) {
             formData.append('post', JSON.stringify(post));
 
             const response = await axios.put(`http://localhost:3000/api/diary/${post._id}`, formData, {
+                withCredentials: true,
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
                 }
             });
@@ -51,11 +51,13 @@ async function submitEdit(post, token) {
 async function deletePost(id) {
     if (confirm('Tem certeza de que deseja excluir este post?')) {
         try {
-            const response = await axios.delete(`http://localhost:8080/admin/delete/post/${id}`)
+            const response = await axios.delete(`http://localhost:3000/api/diary/${id}`, {
+                withCredentials: true,
+            })
                 
             if (response.status === 200) {
                 alert('Post excluído com sucesso!');
-                window.location.reload();
+                window.location.href = '/admin';
             }
         } catch (error) {
             console.error('Erro ao excluir post:', error);
