@@ -8,7 +8,6 @@ block content
                 h3 Error!
                 p= error
                 
-        // Header Card
         .w3-card.w3-white.w3-round-large.w3-margin-bottom
             .w3-container.w3-padding-large
                 .w3-row.w3-valign
@@ -24,7 +23,6 @@ block content
                             i.fa.fa-plus-circle.w3-margin-right
                             | Add New User
 
-        // Main Content Card
         .w3-card.w3-white.w3-round-large
             .w3-container.w3-padding-large
                 if users && users.length > 0
@@ -70,13 +68,12 @@ block content
                                                 )
                                                     i.fa.fa-edit
                                                 button.w3-button.w3-round.w3-red.w3-hover-dark-red(
-                                                    onclick=`deleteUser('${user._id}')`
+                                                    onclick=`window.location.href='/admin/users/delete/${user.email}'`
                                                     style="transition: all 0.3s;"
                                                     title="Delete User"
                                                 )
                                                     i.fa.fa-trash
                             
-                    // Footer with info and navigation
                     .w3-container.w3-padding-large.w3-border-top.w3-light-grey.w3-margin-top
                         .w3-row.w3-valign
                             .w3-col.l6.m6.s12
@@ -96,7 +93,6 @@ block content
                                     i.fa.fa-arrow-left.w3-margin-right
                                     | Voltar ao Dashboard
                 else
-                    // Empty state
                     .w3-container.w3-center.w3-padding-64
                         .w3-container.w3-padding-large
                             i.fa.fa-users.w3-text-teal(style="font-size: 72px; opacity: 0.5;")
@@ -126,7 +122,7 @@ block content
                         i.fa.fa-user-plus.w3-margin-right
                         | Add New User
                 
-                form.w3-container.w3-padding-large(action="/admin/users/add" method="POST")
+                form.w3-container.w3-padding-large(action="/admin/users" method="POST")
                     .w3-row-padding
                         .w3-col.m6.s12
                             label.w3-text-teal
@@ -209,7 +205,6 @@ block content
                                 i.fa.fa-check.w3-margin-right
                                 | Add User
 
-        // Modals de edição
         each user in users || []
             .w3-modal(id=`edit-${user._id}`)
                 .w3-modal-content.w3-card-4.w3-animate-zoom.w3-round-large(style="max-width: 700px;")
@@ -221,7 +216,7 @@ block content
                             i.fa.fa-user-edit.w3-margin-right
                             | Edit User
                     
-                    form.w3-container.w3-padding-large(action=`/admin/users/edit/${user._id}` method="PATCH")
+                    .w3-container.w3-padding-large
                         .w3-row-padding
                             .w3-col.m6.s12
                                 label.w3-text-blue
@@ -229,6 +224,7 @@ block content
                                         i.fa.fa-user.w3-margin-right
                                         | Name
                                 input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                    id=`name-${user._id}`
                                     type="text"
                                     name="name"
                                     value=user.name
@@ -242,6 +238,7 @@ block content
                                         i.fa.fa-at.w3-margin-right
                                         | Username
                                 input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                    id=`username-${user._id}`
                                     type="text"
                                     name="username"
                                     value=user.username
@@ -256,6 +253,7 @@ block content
                                         i.fa.fa-calendar.w3-margin-right
                                         | Birth Date
                                 input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                    id=`date-${user._id}`
                                     type="date"
                                     name="birthdate"
                                     value=(user.birthdate ? new Date(user.birthdate).toISOString().split('T')[0] : '')
@@ -269,6 +267,7 @@ block content
                                         i.fa.fa-envelope.w3-margin-right
                                         | Email
                                 input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                    id=`email-${user._id}`
                                     type="email"
                                     name="email"
                                     value=user.email
@@ -277,8 +276,45 @@ block content
                                 )
                         
                         button.w3-button.w3-block.w3-blue.w3-round-large.w3-margin-top(
-                            type="submit" 
+                            onclick=`editUser('${user._id}', '${user.email}')`
                             style="padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"
                         )
                             i.fa.fa-save.w3-margin-right
                             | Save Changes
+
+block scripts
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js") 
+    script.
+        async function editUser(userId, originalEmail) {    
+            const email = document.getElementById(`email-${userId}`).value;
+            const username = document.getElementById(`username-${userId}`).value;
+            const name = document.getElementById(`name-${userId}`).value;
+            const birthdate = document.getElementById(`date-${userId}`).value;
+            
+            const data = {
+                email,
+                username,
+                name,
+                birthdate
+            };
+
+            try {
+                const response = await axios.put(
+                    `http://localhost:3000/api/users/${originalEmail}`,
+                    data,
+                    { 
+                        withCredentials: true,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                if (response.status === 201) {
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('API error:', error);
+                alert('Failed to update user');
+            }
+        }

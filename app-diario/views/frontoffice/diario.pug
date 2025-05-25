@@ -39,7 +39,16 @@ block content
                                 p
                                     b.w3-text-teal Followers
                                     br
-                                    span.w3-text-grey 200
+                                    span.w3-text-grey 505
+                .w3-container.w3-margin-bottom.w3-card.w3-round-large.w3-white.w3-padding.w3-margin-top
+                    .w3-bar-item.w3-left
+                        .w3-input.w3-border.w3-round-large.w3-margin-right(style="padding: 8px; width: 300px; display: inline-block")
+                            i.fa.fa-search.w3-margin-right
+                            input#searchInput.w3-input.w3-border-0(type="text" placeholder="Search posts..." style="display: inline; width: 85%; padding: 0px;")
+                        select#tagFilter.w3-select.w3-border.w3-round-large(style="width: 200px; display: inline-block")
+                            option(value="") Choose a tag...
+                            each tag in tags || []
+                                option(value=tag)= tag
 
         .w3-row-padding
             each post in posts || []
@@ -76,6 +85,7 @@ block content
                         
                         .w3-container.w3-padding-16
                             p.w3-xlarge(style="margin-top:0; color:#1f2937")= post.title || 'Untitled'
+                            p#postTags.w3-text-grey= `Tags: ${post.tags.join(', ')}`
                             p
                                 i.fa.fa-calendar.w3-text-blue.w3-margin-right
                                 = new Date(post.createdAt).toLocaleString('pt-PT', {timeZone:"Europe/Lisbon"}).substring(0, 17)
@@ -98,3 +108,6 @@ block content
                     i.fa.fa-newspaper.w3-text-teal(style="font-size:48px")
                     h3.w3-text-grey No posts yet
                     p.w3-text-grey Wait for the user to create their first post!
+
+block scripts 
+    script(src="/javascripts/filters.js")

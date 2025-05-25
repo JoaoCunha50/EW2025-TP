@@ -63,6 +63,11 @@ block content
                                                             .w3-center
                                                                 a(href=file.url target="_blank")
                                                                     img.w3-image(src=file.url alt=file.filename style="width: 100%; height: 150px; object-fit:cover;")
+                                                                .w3-padding-16
+                                                                
+                                    a.w3-button.w3-round-large(href=`http://localhost:3000/api/diary/download/${post._id}` style="background:#3b82f6; color:white; padding:8px 16px")
+                                        i.fa.fa-download.w3-margin-right
+                                        | Download
                 else
                     p.w3-xlarge(style="color:#1f2937")= post.title || 'Untitled'
                     p(style="color:#4b5563")= post.content || 'No content'
@@ -102,7 +107,7 @@ block content
                                                         img.w3-image(src=file.url alt=file.filename style="width: 50%; height: 50%; object-fit:cover;")
                             
                             .w3-padding-16
-                                a.w3-button.w3-round-large(href=`/download/${post._id}` style="background:#3b82f6; color:white; padding:8px 16px")
+                                a.w3-button.w3-round-large(href=`http://localhost:3000/api/diary/download/${post._id}` style="background:#3b82f6; color:white; padding:8px 16px")
                                     i.fa.fa-download.w3-margin-right
                                     | Download
 
@@ -119,11 +124,11 @@ block content
 
             if isAdmin
                 .w3-bar.w3-padding
-                    button.w3-button.w3-round-large(onclick=`submitEdit(${JSON.stringify(post)}, ${JSON.stringify(token)})` style="background:#3b82f6; color:white; padding:8px 16px")
+                    button.w3-button.w3-round-large(onclick=`submitEdit(${JSON.stringify(post)})` style="background:#3b82f6; color:white; padding:8px 16px")
                         i.fa.fa-edit.w3-margin-right
                         | Save Changes
 
-                    button.w3-button.w3-round-large(onclick=`deletePost('${post._id}')` style="background:#ef4444; color:white; margin-left:16px; padding:8px 16px")
+                    button.w3-button.w3-round-large(onclick=`deletePost(${JSON.stringify(post._id)})` style="background:#ef4444; color:white; margin-left:16px; padding:8px 16px")
                         i.fa.fa-trash.w3-margin-right
                         | Delete Post
 

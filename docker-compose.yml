@@ -21,7 +21,6 @@ services:
       - mongodb
     volumes:
       - ./api:/api
-      - /api/node_modules
     networks:
       - mynetwork
 
@@ -36,7 +35,6 @@ services:
       - api
     volumes:
       - ./app-diario:/app/diario
-      - /app/diario/node_modules
     networks:
       - mynetwork
 
