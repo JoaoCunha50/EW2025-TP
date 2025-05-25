@@ -19,8 +19,6 @@ services:
       - "3000:3000"
     depends_on:
       - mongodb
-    volumes:
-      - ./api:/api
     networks:
       - mynetwork
 
@@ -33,8 +31,6 @@ services:
       - "8080:8080"
     depends_on:
       - api
-    volumes:
-      - ./app-diario:/app/diario
     networks:
       - mynetwork
 
