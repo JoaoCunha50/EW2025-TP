@@ -1,0 +1,320 @@
+extends ../layout
+
+block content
+    .w3-container.w3-padding-32
+        if error 
+            .w3-panel.w3-red.w3-display-container.w3-round-large.w3-margin-bottom
+                span.w3-button.w3-display-topright(onclick="this.parentElement.style.display='none'") &times;
+                h3 Error!
+                p= error
+                
+        .w3-card.w3-white.w3-round-large.w3-margin-bottom
+            .w3-container.w3-padding-large
+                .w3-row.w3-valign
+                    .w3-col.l8.m8.s12
+                        h1.w3-text-teal(style="margin: 0; text-shadow: 1px 1px 3px rgba(0,0,0,0.1)")
+                            i.fa.fa-users.w3-margin-right
+                            | Users Management
+                    .w3-col.l4.m4.s12.w3-right-align
+                        button.w3-button.w3-round-large.w3-teal.w3-hover-dark-teal.w3-margin-top(
+                            onclick="document.getElementById('add-user-modal').style.display='block'"
+                            style="transition: all 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"
+                        )
+                            i.fa.fa-plus-circle.w3-margin-right
+                            | Add New User
+
+        .w3-card.w3-white.w3-round-large
+            .w3-container.w3-padding-large
+                if users && users.length > 0
+                    .w3-responsive
+                        table.w3-table.w3-striped.w3-bordered(style="border-radius: 8px; overflow: hidden;")
+                            thead
+                                tr.w3-teal
+                                    th.w3-center(style="padding: 16px;")
+                                        i.fa.fa-user.w3-margin-right
+                                        | Name
+                                    th.w3-center(style="padding: 16px;")
+                                        i.fa.fa-at.w3-margin-right
+                                        | Username
+                                    th.w3-center(style="padding: 16px;")
+                                        i.fa.fa-calendar.w3-margin-right
+                                        | Birth Date
+                                    th.w3-center(style="padding: 16px;")
+                                        i.fa.fa-envelope.w3-margin-right
+                                        | Email
+                                    th.w3-center(style="padding: 16px; width: 150px;")
+                                        i.fa.fa-cogs.w3-margin-right
+                                        | Actions
+                            tbody
+                                each user in users
+                                    tr.w3-hover-light-grey(style="transition: all 0.2s;")
+                                        td.w3-padding(style="padding: 16px; vertical-align: middle;")
+                                            .w3-container
+                                                b= user.name
+                                        td.w3-padding.w3-center(style="padding: 16px; vertical-align: middle;")
+                                            code.w3-tag.w3-light-grey.w3-round= user.username
+                                        td.w3-padding.w3-center(style="padding: 16px; vertical-align: middle;")
+                                            span.w3-tag.w3-blue.w3-round
+                                                = user.birthdate ? new Date(user.birthdate).toLocaleDateString('pt-PT', {timeZone:"Europe/Lisbon"}).substring(0, 10) : 'Not provided'
+                                        td.w3-padding.w3-center(style="padding: 16px; vertical-align: middle;")
+                                            a(href=`mailto:${user.email}`)
+                                                = user.email
+                                        td.w3-padding.w3-center(style="padding: 16px; vertical-align: middle;")
+                                            .w3-bar
+                                                button.w3-button.w3-round.w3-teal.w3-margin-right.w3-hover-dark-teal(
+                                                    onclick=`document.getElementById('edit-${user._id}').style.display='block'`
+                                                    style="transition: all 0.3s;"
+                                                    title="Edit User"
+                                                )
+                                                    i.fa.fa-edit
+                                                button.w3-button.w3-round.w3-red.w3-hover-dark-red(
+                                                    onclick=`window.location.href='/admin/users/delete/${user.email}'`
+                                                    style="transition: all 0.3s;"
+                                                    title="Delete User"
+                                                )
+                                                    i.fa.fa-trash
+                            
+                    .w3-container.w3-padding-large.w3-border-top.w3-light-grey.w3-margin-top
+                        .w3-row.w3-valign
+                            .w3-col.l6.m6.s12
+                                .w3-container
+                                    i.fa.fa-info-circle.w3-text-blue.w3-margin-right
+                                    small.w3-text-grey
+                                        | Data de hoje: #{new Date().toLocaleDateString('pt-PT', {timeZone: 'Europe/Lisbon'})}
+                                    br
+                                    i.fa.fa-users.w3-text-teal.w3-margin-right
+                                    small.w3-text-grey
+                                        | Total de usuários: #{users.length}
+                            .w3-col.l6.m6.s12.w3-right-align
+                                a.w3-button.w3-teal.w3-round.w3-hover-dark-teal(
+                                    href="/admin"
+                                    style="transition: all 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"
+                                )
+                                    i.fa.fa-arrow-left.w3-margin-right
+                                    | Voltar ao Dashboard
+                else
+                    .w3-container.w3-center.w3-padding-64
+                        .w3-container.w3-padding-large
+                            i.fa.fa-users.w3-text-teal(style="font-size: 72px; opacity: 0.5;")
+                            h3.w3-text-grey.w3-margin-top No users found
+                            p.w3-text-grey.w3-large The system currently has no registered users.
+                            .w3-margin-top.w3-margin-bottom
+                                button.w3-button.w3-teal.w3-round-large.w3-large.w3-margin-right(
+                                    onclick="document.getElementById('add-user-modal').style.display='block'"
+                                    style="box-shadow: 0 2px 5px rgba(0,0,0,0.2);"
+                                )
+                                    i.fa.fa-plus-circle.w3-margin-right
+                                    | Add First User
+                                a.w3-button.w3-light-grey.w3-round-large.w3-large(
+                                    href="/admin"
+                                    style="box-shadow: 0 2px 5px rgba(0,0,0,0.2);"
+                                )
+                                    i.fa.fa-arrow-left.w3-margin-right
+                                    | Voltar ao Dashboard
+
+        .w3-modal(id="add-user-modal")
+            .w3-modal-content.w3-card-4.w3-animate-zoom.w3-round-large(style="max-width: 600px;")
+                .w3-container.w3-teal.w3-padding-16.w3-round-large
+                    span.w3-button.w3-xlarge.w3-hover-teal.w3-display-topright.w3-round(
+                        onclick="document.getElementById('add-user-modal').style.display='none'"
+                    ) &times;
+                    h3.w3-margin.w3-center
+                        i.fa.fa-user-plus.w3-margin-right
+                        | Add New User
+                
+                form.w3-container.w3-padding-large(action="/admin/users" method="POST")
+                    .w3-row-padding
+                        .w3-col.m6.s12
+                            label.w3-text-teal
+                                b
+                                    i.fa.fa-envelope.w3-margin-right
+                                    | Email
+                            input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                type="email"
+                                name="email"
+                                required
+                                style="padding: 12px;"
+                                placeholder="Enter email address"
+                            )
+                        
+                        .w3-col.m6.s12
+                            label.w3-text-teal
+                                b
+                                    i.fa.fa-at.w3-margin-right
+                                    | Username
+                            input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                type="text"
+                                name="username"
+                                required
+                                style="padding: 12px;"
+                                placeholder="Enter username"
+                            )
+                    
+                    .w3-row-padding
+                        .w3-col.m6.s12
+                            label.w3-text-teal
+                                b
+                                    i.fa.fa-lock.w3-margin-right
+                                    | Password
+                            input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                type="password"
+                                name="password"
+                                required
+                                style="padding: 12px;"
+                                placeholder="Enter password"
+                            )
+                        
+                        .w3-col.m6.s12
+                            label.w3-text-teal
+                                b
+                                    i.fa.fa-user.w3-margin-right
+                                    | Full Name
+                            input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                type="text"
+                                name="name"
+                                required
+                                style="padding: 12px;"
+                                placeholder="Enter full name"
+                            )
+                    
+                    label.w3-text-teal
+                        b
+                            i.fa.fa-calendar.w3-margin-right
+                            | Birth Date
+                    input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                        type="date"
+                        name="birthdate"
+                        required
+                        style="padding: 12px;"
+                    )
+                    
+                    .w3-row.w3-margin-top
+                        .w3-half
+                            button.w3-button.w3-block.w3-light-grey.w3-round-large.w3-large(
+                                type="button"
+                                onclick="document.getElementById('add-user-modal').style.display='none'"
+                                style="margin-right: 4px;box-shadow: 0 2px 5px rgba(0,0,0,0.2)"
+                            )
+                                i.fa.fa-times.w3-margin-right
+                                | Cancel
+                        .w3-half
+                            button.w3-button.w3-block.w3-teal.w3-round-large.w3-large(
+                                type="submit"
+                                style="margin-left: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"
+                            )
+                                i.fa.fa-check.w3-margin-right
+                                | Add User
+
+        each user in users || []
+            .w3-modal(id=`edit-${user._id}`)
+                .w3-modal-content.w3-card-4.w3-animate-zoom.w3-round-large(style="max-width: 700px;")
+                    .w3-container.w3-blue.w3-padding-16.w3-round-large
+                        span.w3-button.w3-xlarge.w3-hover-blue.w3-display-topright.w3-round(
+                            onclick=`document.getElementById('edit-${user._id}').style.display='none'`
+                        ) &times;
+                        h3.w3-margin.w3-center
+                            i.fa.fa-user-edit.w3-margin-right
+                            | Edit User
+                    
+                    .w3-container.w3-padding-large
+                        .w3-row-padding
+                            .w3-col.m6.s12
+                                label.w3-text-blue
+                                    b
+                                        i.fa.fa-user.w3-margin-right
+                                        | Name
+                                input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                    id=`name-${user._id}`
+                                    type="text"
+                                    name="name"
+                                    value=user.name
+                                    required
+                                    style="padding: 12px;"
+                                )
+                            
+                            .w3-col.m6.s12
+                                label.w3-text-blue
+                                    b
+                                        i.fa.fa-at.w3-margin-right
+                                        | Username
+                                input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                    id=`username-${user._id}`
+                                    type="text"
+                                    name="username"
+                                    value=user.username
+                                    required
+                                    style="padding: 12px;"
+                                )
+                        
+                        .w3-row-padding
+                            .w3-col.m6.s12
+                                label.w3-text-blue
+                                    b
+                                        i.fa.fa-calendar.w3-margin-right
+                                        | Birth Date
+                                input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                    id=`date-${user._id}`
+                                    type="date"
+                                    name="birthdate"
+                                    value=(user.birthdate ? new Date(user.birthdate).toISOString().split('T')[0] : '')
+                                    required
+                                    style="padding: 12px;"
+                                )
+                            
+                            .w3-col.m6.s12
+                                label.w3-text-blue
+                                    b
+                                        i.fa.fa-envelope.w3-margin-right
+                                        | Email
+                                input.w3-input.w3-border.w3-round.w3-margin-bottom(
+                                    id=`email-${user._id}`
+                                    type="email"
+                                    name="email"
+                                    value=user.email
+                                    required
+                                    style="padding: 12px;"
+                                )
+                        
+                        button.w3-button.w3-block.w3-blue.w3-round-large.w3-margin-top(
+                            onclick=`editUser('${user._id}', '${user.email}')`
+                            style="padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"
+                        )
+                            i.fa.fa-save.w3-margin-right
+                            | Save Changes
+
+block scripts
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js") 
+    script.
+        async function editUser(userId, originalEmail) {    
+            const email = document.getElementById(`email-${userId}`).value;
+            const username = document.getElementById(`username-${userId}`).value;
+            const name = document.getElementById(`name-${userId}`).value;
+            const birthdate = document.getElementById(`date-${userId}`).value;
+            
+            const data = {
+                email,
+                username,
+                name,
+                birthdate
+            };
+
+            try {
+                const response = await axios.put(
+                    `http://localhost:3000/api/users/${originalEmail}`,
+                    data,
+                    { 
+                        withCredentials: true,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                if (response.status === 201) {
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('API error:', error);
+                alert('Failed to update user');
+            }
+        }

@@ -8,7 +8,6 @@ block content
                 h3 Error!
                 p= error
 
-        // Header - Gradiente mais suave e amigável
         .w3-row.w3-margin-bottom.w3-padding-16.w3-round-large.w3-white(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
             .w3-col.l9.m8.s12.w3-container
                 .w3-row
@@ -18,6 +17,9 @@ block content
                 button.w3-button.w3-round-large.w3-red.w3-hover-red.w3-margin-top(onclick="window.location.href='/logout'" style="transition: transform 0.3s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
                         i.fa.fa-sign-out.w3-margin-right
                         | Logout
+                button.w3-button.w3-round-large.w3-blue.w3-hover-blue.w3-margin-top(onclick="window.location.href='/admin/users'" style="transition: transform 0.3s; margin-left: 12px" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                        i.fa.fa-user.w3-margin-right
+                        | User Dashboard
 
         .w3-row.w3-margin-bottom
             .w3-col.s12
@@ -41,25 +43,29 @@ block content
 
         .w3-container.w3-margin-bottom.w3-card.w3-round-large.w3-white
             .w3-bar
-                button.w3-bar-item.w3-button.w3-round-large.w3-hover-black(onclick="window.location.href='/admin/add/post'" style="transition: all 0.3s; margin-top: 10px; background: linear-gradient(to right, #00d2ff 0%, #3a7bd5 100%); color: white")
+                button.w3-bar-item.w3-button.w3-round-large.w3-hover-black(onclick="window.location.href='/admin/posts/add'" style="transition: all 0.3s; margin-top: 10px; background: linear-gradient(to right, #00d2ff 0%, #3a7bd5 100%); color: white")
                     i.fa.fa-plus-circle.w3-margin-right
                     | Add New Post
                 .w3-bar-item.w3-right
-                    .w3-input.w3-border.w3-round-large(style="padding: 8px; width: 300px")
+                    .w3-input.w3-border.w3-round-large.w3-margin-right(style="padding: 8px; width: 300px; display: inline-block")
                         i.fa.fa-search.w3-margin-right
-                        input.w3-input.w3-border-0(type="text" placeholder="Search posts..." style="display: inline; width: 85%; padding: 0px;")
+                        input#searchInput.w3-input.w3-border-0(type="text" placeholder="Search posts..." style="display: inline; width: 85%; padding: 0px;")
+                    select#tagFilter.w3-select.w3-border.w3-round-large(style="width: 200px; display: inline-block")
+                        option(value="") Choose a tag...
+                        each tag in tags || []
+                            option(value=tag)= tag
 
         .w3-row-padding
             each post in posts || []
                 .w3-col.l4.m6.w3-margin-bottom
-                    .w3-card.w3-round-large.w3-white.w3-hover-shadow(style="transition: all 0.3s;" onmouseover="this.style.boxShadow='0 8px 16px 0 rgba(0,0,0,0.2)'" onmouseout="this.style.boxShadow='0 4px 8px 0 rgba(0,0,0,0.1)'" onclick=`window.location.href='/admin/post/${post._id}'`)
+                    .w3-card.w3-round-large.w3-white.w3-hover-shadow(style="transition: all 0.3s;" onmouseover="this.style.boxShadow='0 8px 16px 0 rgba(0,0,0,0.2)'" onmouseout="this.style.boxShadow='0 4px 8px 0 rgba(0,0,0,0.1)'" onclick=`window.location.href='/admin/posts/${post._id}'`)
                         - const imageFiles = post.files ? post.files.filter(file => file.type && file.type.startsWith('image/')) : []
                         - const docFiles = post.files ? post.files.filter(file => !file.type.startsWith('image/')) : []
                         - const remainingFiles = (post.files.length > 0 ? post.files.length : 0) - (imageFiles.length > 0 ? 1 : 0) - (docFiles.length > 0 ? 1 : 0)
 
                         if imageFiles.length > 0
                             .w3-display-container(style="height: 180px; overflow: hidden")
-                                img.w3-image(src=imageFiles[0].path alt=imageFiles[0].filename style="width:100%; height:100%; object-fit: cover")
+                                img.w3-image(src=imageFiles[0].url alt=imageFiles[0].filename style="width:100%; height:100%; object-fit: cover")
                                 if post.isPublic
                                     .w3-tag.w3-teal.w3-round.w3-display-topright.w3-margin Public
                                 else
@@ -79,9 +85,10 @@ block content
                         
                         .w3-container.w3-padding-16
                             p.w3-xlarge(style="margin-top:0")= post.title || 'Untitled'
+                            p#postTags.w3-text-grey= `Tags: ${post.tags.join(', ')}`
                             p
                                 i.fa.fa-calendar.w3-text-blue.w3-margin-right
-                                = new Date(post.createdAt).toLocaleString('pt-PT').substring(0, 17)
+                                = new Date(post.createdAt).toLocaleString('pt-PT', {timeZone:"Europe/Lisbon"}).substring(0, 17)
                             p.w3-text-grey= post.content ? (post.content.length > 100 ? post.content.substring(0, 100) + '...' : post.content) : 'No content'
                             
                             .w3-row.w3-margin-top
@@ -90,7 +97,7 @@ block content
                                         i.fa.fa-comments.w3-margin-right
                                         = (post.comments && post.comments.length) || 0
                                 .w3-col.s6.w3-right-align
-                                    button.w3-button.w3-round.w3-blue.w3-hover-dark-blue.w3-margin-right(onclick=`event.stopPropagation(); window.location.href = '/admin/post/${id}'` style="transition: all 0.3s")
+                                    button.w3-button.w3-round.w3-blue.w3-hover-dark-blue.w3-margin-right(onclick=`event.stopPropagation(); window.location.href = '/admin/posts/${post._id}'` style="transition: all 0.3s")
                                         i.fa.fa-edit
                                     button.w3-button.w3-round.w3-red.w3-hover-dark-red(onclick=`event.stopPropagation(); deletePost('${post._id}')` style="transition: all 0.3s")
                                         i.fa.fa-trash
@@ -98,3 +105,4 @@ block content
 block scripts
     script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
     script(src="/javascripts/posts.js")
+    script(src="/javascripts/filters.js")

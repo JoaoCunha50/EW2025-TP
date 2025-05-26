@@ -5,7 +5,6 @@ const { generateToken } = require('./token');
 
 router.post('/login', async (req, res) => {
     try {
-        console.log(req.body)
         const user = await User.findAdminByEmail(req.body.email);
         if (!user) {
             return res.status(404).json({ error: 'Email ou password inválidos' });
@@ -23,6 +22,7 @@ router.post('/login', async (req, res) => {
         });
 
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Erro ao autenticar utilizador', error: error.message });
     }
 });

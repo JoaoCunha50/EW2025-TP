@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose')
-var passport = require('./config/passport');
+var passport = require('./utils/passport');
 var session = require('express-session');
 var cors = require('cors');
 var auth = require('./config/config');
@@ -24,7 +24,11 @@ var diaryRouter = require('./routes/diary')
 
 var app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:8080',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}));
 
 app.use(logger('dev'));
 app.use(express.json());

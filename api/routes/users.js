@@ -9,14 +9,14 @@ router.get('/',
   auth.isAdmin,
   function(req, res, next) {
     User.list()
-      .then(data => res.jsonp(data))
+      .then(data => res.jsonp(data.filter(user => user.role !== 'admin')))
       .catch(erro => res.status(500).jsonp(erro));
 });
 
 router.post('/', function(req, res, next) {
   User.createUser(req.body)
     .then(data => res.status(200).jsonp(data))
-    .catch(erro => res.status(500).jsonp(erro));
+    .catch(erro => {console.error(erro); res.status(500).jsonp(erro)});
 });
 
 router.get('/:email', 
@@ -26,46 +26,40 @@ router.get('/:email',
     User.findByEmail(req.params.email)
       .then(data => {
         if (!data) {
+          console.error('utilizador não encontrado');
           return res.status(404).jsonp({ message: 'utilizador não encontrado' });
         }
         res.jsonp(data);
       })
-      .catch(erro => res.status(500).jsonp(erro));
+      .catch(erro =>{ console.error(erro); res.status(500).jsonp(erro)});
 });
 
 router.delete('/:email', 
   auth.isAuthenticated,
   auth.isAdmin,
   function(req, res, next) {
-    if (req.user.role === 'admin' || req.user.email === req.params.email) {
       User.removeUser(req.params.email)
         .then(data => {
           if (!data) {
             return res.status(404).jsonp({ message: 'utilizador não encontrado' });
           }
-          res.jsonp({ message: 'utilizador removido com sucesso' });
+          res.status(200).jsonp({ message: 'utilizador removido com sucesso' });
         })
-        .catch(erro => res.status(500).jsonp(erro));
-    } else {
-      res.status(403).jsonp({ message: 'Permissão negada' });
-    }
-});
+        .catch(erro => {res.status(500).jsonp(erro); console.error(erro);});
+    });
 
 router.put('/:email', 
   auth.isAuthenticated,
+  auth.isAdmin,
   function(req, res, next) {
-    if (req.user.role === 'admin' || req.user.email === req.params.email) {
-      User.updateUser(req.params.email, req.body)
+      User.updateUser(req.body.email, req.body)
         .then(data => {
           if (!data) {
             return res.status(404).jsonp({ message: 'utilizador não encontrado' });
           }
-          res.jsonp(data);
+          res.status(201).jsonp(data);
         })
-        .catch(erro => res.status(500).jsonp(erro));
-    } else {
-      res.status(403).jsonp({ message: 'Permissão negada' });
-    }
-});
+        .catch(erro => {res.status(500).jsonp(erro); console.error(erro);});
+  });
 
 module.exports = router;
