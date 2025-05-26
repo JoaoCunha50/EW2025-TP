@@ -18,9 +18,12 @@ router.get('/register', function(req, res) {
 
 router.get('/posts/:id', async function(req, res) {
     try {
+        const token = req.cookies.token;
+        const userEmail = req.cookies.email;
         const response = await axios.get(`http://api:3000/api/diary/${req.params.id}`)
         var post = response.data
-        return res.render('post', { title: "Post", post: post });
+
+        return res.render('post', { title: "Post", post: post, authenticated: req.cookies.token != null, token, userEmail });
     } catch (error) {
         console.error("Error: " + error);
         return res.redirect("/diario")
@@ -82,6 +85,11 @@ router.post('/login', async function(req, res) {
         
         if (response.data.token) {
             res.cookie('token', response.data.token, {
+                httpOnly: true,
+                secure: false
+            });
+
+            res.cookie('email', response.data.user.email, {
                 httpOnly: true,
                 secure: false
             });

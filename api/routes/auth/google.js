@@ -24,6 +24,11 @@ router.get('/callback',
         httpOnly: true,
         secure: false
       });
+      
+      res.cookie('email', user.email, {
+        httpOnly: true,
+        secure: false
+      });
 
       res.redirect(`http://localhost:8080/auth/google/callback`);
     } catch (error) {
