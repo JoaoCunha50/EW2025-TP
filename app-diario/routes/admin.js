@@ -106,9 +106,10 @@ router.get('/posts/add', isAdmin, function(req, res) {
 
 router.get('/posts/:id', isAdmin, async function(req, res) {
     try {
+        const email = req.cookies.email;
         const response = await axios.get(`http://api:3000/api/diary/${req.params.id}`)
         var post = response.data
-        return res.render('post', { title: "Post", post: post, isAdmin: true});
+        return res.render('post', { title: "Post", post: post, isAdmin: true, authenticated: true, userEmail: email});
     } catch (error) {
 
         console.error("Error: " + error);

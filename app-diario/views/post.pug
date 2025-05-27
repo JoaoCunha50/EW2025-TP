@@ -63,36 +63,36 @@ block content
                                 //- Documents Section
                                 .w3-container.w3-padding-16.w3-round-large(style="background:#f8fafc; margin-bottom:16px; border:1px solid #e5e7eb;")
                                     h4(style="color:#1e293b; margin-top:0; font-weight:600;") 
-                                        i.fas.fa-file-alt.w3-margin-right
+                                        i.fas.fa-file-alt.w3-text-teal.w3-margin-right
                                         | Documents
                                     .w3-row-padding
                                         each file in post.files
                                             if file.type && !file.type.startsWith('image/')
                                                 .w3-col.l6.m6.s12.w3-margin-bottom
-                                                    .w3-container.w3-round-large.w3-white.w3-padding-16(
+                                                    .w3-container.w3-round-large.w3-white.w3-padding-16.file-container(
                                                         style="border:1px solid #e5e7eb; position:relative;"
                                                         data=file.path
                                                     )
                                                         .w3-display-container
-                                                            button.w3-button.w3-display-topright.mark-delete-btn(
+                                                            button.w3-button.w3-display-right.mark-delete-btn(
                                                                 data=file.path 
                                                                 type="button"
-                                                                style="padding:4px 8px;"
+                                                                style="padding-bottom: 8px;"
                                                             )
                                                                 i.fa.fa-trash.w3-text-red
                                                             i.fa.fa-file-pdf.w3-text-red(style="margin-right:12px;")
-                                                            a(href=file.path target="_blank" style="word-break:break-all;")= file.filename
+                                                            a(href=file.url target="_blank" style="word-break:break-all;")= file.filename
 
                                 //- Images Section
                                 .w3-container.w3-padding-16.w3-round-large(style="background:#f8fafc; margin-bottom:16px; border:1px solid #e5e7eb;")
                                     h4(style="color:#1e293b; margin-top:0; font-weight:600;")
-                                        i.fas.fa-images.w3-margin-right
+                                        i.fas.fa-images.w3-text-teal.w3-margin-right
                                         | Images
                                     .w3-row-padding
                                         each file in post.files
                                             if file.type && file.type.startsWith('image/')
                                                 .w3-col.l6.m6.s12.w3-margin-bottom
-                                                    .w3-container.w3-padding-16.w3-round-large.w3-white(
+                                                    .w3-container.w3-padding-16.w3-round-large.w3-white.file-container(
                                                         style="border:1px solid #e5e7eb;"
                                                         data=file.path
                                                     )
@@ -100,16 +100,22 @@ block content
                                                             button.w3-button.w3-display-topright.mark-delete-btn(
                                                                 data=file.path 
                                                                 type="button"
-                                                                style="padding:4px 8px;"
                                                             )
                                                                 i.fa.fa-trash.w3-text-red
                                                         .w3-center
-                                                            a(href=file.path target="_blank")
+                                                            a(href=file.url target="_blank")
                                                                 img.w3-image(
-                                                                    src=file.path 
+                                                                    src=file.url 
                                                                     alt=file.filename 
                                                                     style="width:100%; height:180px; object-fit:cover; border-radius:8px;"
                                                                 )
+                        .w3-center.w3-padding-16
+                            a.w3-button.w3-round-large.w3-teal.w3-padding-large(
+                                href=`http://localhost:3000/api/diary/download/${post._id}`
+                                style="min-width:200px;"
+                            )
+                                i.fa.fa-download.w3-margin-right
+                                | Download All Files
                 else
                     .w3-margin-bottom
                         p(style="color:rgb(44, 48, 54); line-height:1.6; white-space:pre-wrap; margin-bottom:16px;")= post.content || 'No content available'
@@ -127,7 +133,7 @@ block content
                         if post.files.some(file => !file.type || !file.type.startsWith('image/'))
                             .w3-container.w3-padding-16.w3-round-large(style="background:#f8fafc; margin-bottom:16px; border:1px solid #e5e7eb;")
                                 h4(style="color:#1e293b; margin-top:0; font-weight:600;")
-                                    i.fas.fa-file-alt.w3-margin-right
+                                    i.fas.fa-file-alt.w3-margin-right.w3-text-teal
                                     | Documents
                                 each file in post.files
                                     if !file.type || !file.type.startsWith('image/')
@@ -135,12 +141,12 @@ block content
                                             style="margin:8px 0; border:1px solid #e5e7eb; display:flex; align-items:center;"
                                         )
                                             i.fa.fa-file-pdf.w3-text-red.w3-margin-right(style="font-size:24px;")
-                                            a(href=file.path target="_blank" style="flex-grow:1; word-break:break-all;")= file.filename
+                                            a(href=file.url target="_blank" style="flex-grow:1; word-break:break-all;")= file.filename
 
                         if post.files.some(file => file.type && file.type.startsWith('image/'))
                             .w3-container.w3-padding-16.w3-round-large(style="background:#f8fafc; margin-bottom:16px; border:1px solid #e5e7eb;")
                                 h4(style="color:#1e293b; margin-top:0; font-weight:600;")
-                                    i.fas.fa-images.w3-margin-right
+                                    i.fas.fa-images.w3-margin-right.w3-text-teal
                                     | Images
                                 .w3-row-padding
                                     each file in post.files
@@ -150,43 +156,42 @@ block content
                                                     style="border:1px solid #e5e7eb;"
                                                 )
                                                     .w3-center
-                                                        a(href=file.path target="_blank")
+                                                        a(href=file.url target="_blank")
                                                             img.w3-image(
-                                                                src=file.path 
+                                                                src=file.url 
                                                                 alt=file.filename 
                                                                 style="width:100%; height:180px; object-fit:cover; border-radius:8px;"
                                                             )
                                                     .w3-margin-top
-                                                        a(href=file.path target="_blank" style="word-break:break-all;")= file.filename
+                                                        a(href=file.url target="_blank" style="word-break:break-all;")= file.filename
 
                         .w3-center.w3-padding-16
                             a.w3-button.w3-round-large.w3-teal.w3-padding-large(
-                                href=`/download/${post._id}`
+                                href=`http://localhost:3000/api/diary/download/${post._id}`
                                 style="min-width:200px;"
                             )
                                 i.fa.fa-download.w3-margin-right
                                 | Download All Files
 
-            .w3-container.w3-padding-24(style="border-top:1px solid #e5e7eb;")
-                h3(style="color:#1e293b; font-weight:600; margin-bottom:24px;")
-                    i.fas.fa-comments.w3-margin-right.w3-text-teal
-                    | Comments
-
-                .w3-container.w3-margin-bottom(style="display:flex; gap:12px;")
-                    input#w3-input-comment.w3-input.w3-border.w3-round-large(
-                        type="text"
-                        placeholder=authenticated ? "Add a comment..." : "Please login to comment"
-                        autocomplete="off"
-                        style="flex-grow:1; padding:12px 16px; border-color:#e5e7eb;"
-                        disabled=!authenticated
-                    )
-                    button.w3-button.w3-round-large.w3-teal(
-                        onclick=authenticated ? `submitComment('${post._id}', '${token}', '${userEmail}')` : "return false;"
-                        style=`padding:12px 24px; display:flex; align-items:center; justify-content:center; gap:8px; ${!authenticated ? 'background:#e5e7eb !important; color:#9ca3af !important; cursor:not-allowed;' : ''}`
-                        disabled=!authenticated
-                    )
-                        i.fas.fa-paper-plane
-                        span Comentar
+                .w3-container.w3-padding-24(style="border-top:1px solid #e5e7eb;")
+                    h3(style="color:#1e293b; font-weight:600; margin-bottom:24px;")
+                        i.fas.fa-comments.w3-margin-right.w3-text-teal
+                        | Comments
+                    .w3-container.w3-margin-bottom(style="display:flex; gap:12px;")
+                        input#w3-input-comment.w3-input.w3-border.w3-round-large(
+                            type="text"
+                            placeholder=authenticated ? "Add a comment..." : "Please login to comment"
+                            autocomplete="off"
+                            style="flex-grow:1; padding:12px 16px; border-color:#e5e7eb;"
+                            disabled=!authenticated
+                        )
+                        button.w3-button.w3-round-large.w3-teal(
+                            onclick=authenticated ? `submitComment('${post._id}', '${userEmail ? userEmail : 'Admin'}')` : "return false;"
+                            style=`padding:12px 24px; display:flex; align-items:center; justify-content:center; gap:8px; ${!authenticated ? 'background:#e5e7eb !important; color:#9ca3af !important; cursor:not-allowed;' : ''}`
+                            disabled=!authenticated
+                        )
+                            i.fas.fa-paper-plane
+                            span Comentar
 
                 if post.comments && post.comments.length > 0
                     .w3-container

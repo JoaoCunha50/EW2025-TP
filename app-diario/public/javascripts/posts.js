@@ -27,7 +27,6 @@ async function submitEdit(post) {
             if (fileInput.files.length > 0) {
                 formData.append('file', fileInput.files[0]);
             }
-
             formData.append('post', JSON.stringify(post));
 
             const response = await axios.put(`http://localhost:3000/api/diary/${post._id}`, formData, {
@@ -38,8 +37,8 @@ async function submitEdit(post) {
             });
 
             if (response.status === 200) {
-                window.location.href = '/admin';
                 alert('Post atualizado com sucesso!');
+                window.location.href = '/admin';
             }
         } catch (error) {
             console.error('Erro ao atualizar post:', error);

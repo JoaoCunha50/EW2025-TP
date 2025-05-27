@@ -145,7 +145,6 @@ router.put('/:id', isAuthenticated, isAdmin, upload.single('file'), async (req, 
         if (!post.files) {
             post.files = [];
         }
-
         if (post.filesToDelete && Array.isArray(post.filesToDelete)) {
             for (const fileToDelete of post.filesToDelete) {
                 try {

@@ -96,11 +96,6 @@ block content
                                     span.w3-tag.w3-round.w3-light-grey
                                         i.fa.fa-comments.w3-margin-right
                                         = (post.comments && post.comments.length) || 0
-                                .w3-col.s6.w3-right-align
-                                    if post.isPublic
-                                        span.w3-tag.w3-round.w3-teal Public
-                                    else
-                                        span.w3-tag.w3-round.w3-light-grey Private
 
         if !posts || posts.length === 0
             .w3-container.w3-center.w3-padding-64

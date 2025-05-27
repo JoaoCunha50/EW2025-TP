@@ -9,7 +9,6 @@ var session = require('express-session');
 var cors = require('cors');
 var auth = require('./config/config');
 const { seedAdmin } = require('./config/dbSeed');
-var DiaryModel = require('./models/diaryContent')
 
 var mongoDB = 'mongodb://mongodb:27017/diario'
 mongoose.connect(mongoDB)
