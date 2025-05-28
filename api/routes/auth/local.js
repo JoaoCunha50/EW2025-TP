@@ -16,9 +16,10 @@ router.post('/login', async (req, res) => {
     }
 
     const token = generateToken(user);
-
-    res.json({
+    console.log(`Utilizador autenticado: ${user.email}`);
+    res.status(200).json({
       token,
+      email: user.email,
     });
   } catch (error) {
     console.error(error);
