@@ -29,6 +29,20 @@ router.get('/posts/:id', async function(req, res) {
     }
 });
 
+router.get('/posts/download/:id', async (req, res) => {
+    try {
+        const downloadUrl = `http://localhost:3000/api/diary/download/${req.params.id}`;
+        res.redirect(downloadUrl);
+
+    } catch (error) {
+        console.error('Download error:', error);
+        res.render('error', {
+            title: 'Error',
+            message: 'Error downloading files'
+        });
+    }
+});
+
 router.get('/diario', async function(req, res) {
     try{
         const authenticated = req.cookies.token != null
@@ -81,14 +95,14 @@ router.post('/login', async function(req, res) {
             email: req.body.email,
             password: req.body.password
         });
-        
-        if (response.data.token) {
+
+        if (response.data.token && response.data.email) {
             res.cookie('token', response.data.token, {
                 httpOnly: true,
                 secure: false
             });
 
-            res.cookie('email', response.data.user.email, {
+            res.cookie('email', response.data.email, {
                 httpOnly: true,
                 secure: false
             });

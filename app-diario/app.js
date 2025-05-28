@@ -6,8 +6,17 @@ var logger = require('morgan');
 var publicRouter = require('./routes/public');
 var authRouter = require('./routes/auth');
 var adminRouter = require('./routes/admin');
+var winston = require('winston');
 
 var app = express();
+
+const loggerWinston = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'logs/app.log' }),
+  ],
+});
 
 // view engine setup
 app.set('views', [
@@ -22,6 +31,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+  res.on('finish', () => {
+    if(res.statusCode >= 400) {
+      loggerWinston.error({
+        method: req.method,
+        url: req.originalUrl,
+        status: res.statusCode,
+        timestamp: new Date().toISOString()
+      });
+    }
+    else
+    loggerWinston.info({
+      method: req.method,
+      url: req.originalUrl,
+      status: res.statusCode,
+      timestamp: new Date().toISOString()
+    });
+  });
+  next();
+});
+
 
 app.use('/', publicRouter);
 app.use('/auth', authRouter);

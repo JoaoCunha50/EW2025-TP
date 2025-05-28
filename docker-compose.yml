@@ -21,7 +21,7 @@ services:
       - mongodb
     volumes:
       - ./api:/api
-      - /api/node_modules
+      - api_node_modules:/api/node_modules
     networks:
       - mynetwork
 
@@ -36,13 +36,15 @@ services:
       - api
     volumes:
       - ./app-diario:/app/diario
-      - /app/diario/node_modules
+      - app_diario_node_modules:/app/diario/node_modules
     networks:
       - mynetwork
 
 volumes:
   mongo2025:
     name: mongo2025
+  api_node_modules:
+  app_diario_node_modules:
 
 networks:
   mynetwork:

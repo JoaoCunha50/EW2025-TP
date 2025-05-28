@@ -1,0 +1,13 @@
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"2025-05-28T10:14:52.895Z","url":"/posts/6836e034921659c099d00a50"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"2025-05-28T10:14:56.194Z","url":"/login"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"2025-05-28T10:15:01.068Z","url":"/register"}}
+{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:15:16.159Z","url":"/register"}}
+{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:15:24.175Z","url":"/login"}}
+{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:17:19.147Z","url":"/login"}}
+{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:17:53.501Z","url":"/login"}}
+{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:18:56.014Z","url":"/login"}}
+{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:20:33.290Z","url":"/login"}}
+{"level":"info","message":{"method":"POST","status":302,"timestamp":"2025-05-28T10:22:10.523Z","url":"/login"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"2025-05-28T10:22:10.822Z","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"2025-05-28T10:22:13.050Z","url":"/posts/6836e034921659c099d00a50"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"2025-05-28T10:22:20.598Z","url":"/posts/6836e034921659c099d00a50"}}
