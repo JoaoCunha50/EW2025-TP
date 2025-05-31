@@ -2,9 +2,13 @@
 
 ### Projeto Final – Engenharia Web 2025  
 **Grupo:** 24 - PixelPulse
+
 **Autores:** João Manuel Machado da Cunha (A104611) / João Pedro Ribeiro de Sá (A104612) / Gonçalo da Silva Alves (A104079)
+
 **Data de Entrega:** 1 de Junho de 2025  
+
 **Docente:** José Carlos Ramalho
+
 **Nota:** ? / 20 ⭐
 
 ---
