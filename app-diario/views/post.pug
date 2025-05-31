@@ -10,8 +10,12 @@ block content
 
         .w3-card-4.w3-round-large(style="box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom:24px; overflow:hidden;")
             .w3-container.w3-padding-16(style="background: linear-gradient(to bottom, #00796b 0%, #70b7a1 100%); color:white; position:relative;")
-                a(href="/diario" title="Voltar" style="position:absolute; top:px; right:16px; color:white; font-size:20px;")
-                    i.fa.fa-times
+                if isAdmin
+                    a(href="/admin" title="Voltar" style="position:absolute; top:16px; right:16px; color:white; font-size:20px;")
+                        i.fa.fa-times
+                else
+                    a(href="/diario" title="Voltar" style="position:absolute; top:16px; right:16px; color:white; font-size:20px;")
+                        i.fa.fa-times
 
                 if isAdmin
                     h2(style="font-weight:600; margin:0 0 8px 0;") Edit Post

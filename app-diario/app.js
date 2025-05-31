@@ -39,7 +39,7 @@ app.use((req, res, next) => {
         method: req.method,
         url: req.originalUrl,
         status: res.statusCode,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' }).substring(0, 20 )
       });
     }
     else
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
       method: req.method,
       url: req.originalUrl,
       status: res.statusCode,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' }).substring(0, 20)
     });
   });
   next();

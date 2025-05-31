@@ -1,13 +1,130 @@
-{"level":"info","message":{"method":"GET","status":304,"timestamp":"2025-05-28T10:14:52.895Z","url":"/posts/6836e034921659c099d00a50"}}
-{"level":"info","message":{"method":"GET","status":304,"timestamp":"2025-05-28T10:14:56.194Z","url":"/login"}}
-{"level":"info","message":{"method":"GET","status":200,"timestamp":"2025-05-28T10:15:01.068Z","url":"/register"}}
-{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:15:16.159Z","url":"/register"}}
-{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:15:24.175Z","url":"/login"}}
-{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:17:19.147Z","url":"/login"}}
-{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:17:53.501Z","url":"/login"}}
-{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:18:56.014Z","url":"/login"}}
-{"level":"info","message":{"method":"POST","status":200,"timestamp":"2025-05-28T10:20:33.290Z","url":"/login"}}
-{"level":"info","message":{"method":"POST","status":302,"timestamp":"2025-05-28T10:22:10.523Z","url":"/login"}}
-{"level":"info","message":{"method":"GET","status":200,"timestamp":"2025-05-28T10:22:10.822Z","url":"/diario"}}
-{"level":"info","message":{"method":"GET","status":200,"timestamp":"2025-05-28T10:22:13.050Z","url":"/posts/6836e034921659c099d00a50"}}
-{"level":"info","message":{"method":"GET","status":200,"timestamp":"2025-05-28T10:22:20.598Z","url":"/posts/6836e034921659c099d00a50"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:44:35","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":302,"timestamp":"31/05/2025, 00:44:51","url":"/logout"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:44:52","url":"/"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 00:44:53","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 00:44:54","url":"/login"}}
+{"level":"info","message":{"method":"GET","status":302,"timestamp":"31/05/2025, 00:44:56","url":"/auth/google"}}
+{"level":"info","message":{"method":"GET","status":302,"timestamp":"31/05/2025, 00:44:56","url":"/auth/google/callback"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:44:56","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 00:45:03","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 00:45:06","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":302,"timestamp":"31/05/2025, 00:45:07","url":"/logout"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 00:45:07","url":"/"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:45:10","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":302,"timestamp":"31/05/2025, 00:45:12","url":"/admin/"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:45:12","url":"/admin/login"}}
+{"level":"info","message":{"method":"POST","status":302,"timestamp":"31/05/2025, 00:45:21","url":"/admin/login"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:45:21","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:45:24","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:46:12","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:46:28","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:46:49","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:47:14","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:48:35","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:49:43","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:54:31","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:55:46","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:56:40","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 00:57:07","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:03:11","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 01:03:30","url":"/admin/posts/add"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:03:42","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:04:29","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 01:04:33","url":"/admin/posts/add"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:04:42","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:04:43","url":"/admin/logs"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 01:04:46","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:06:44","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:06:53","url":"/posts/683a479880134643c0740a0a"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:06:56","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:07:18","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:07:46","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:09:34","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:10:42","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:12:50","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:13:14","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:13:30","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 01:14:42","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:14:44","url":"/posts/683a479880134643c0740a0a"}}
+{"level":"error","message":{"method":"GET","status":404,"timestamp":"31/05/2025, 01:14:48","url":"/admin/dashboard"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:15:04","url":"/posts/downloads/683a479880134643c0740a0a"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 01:15:06","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:15:08","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:15:55","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:28:00","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 01:33:38","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:15:43","url":"/"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:15:48","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":302,"timestamp":"31/05/2025, 15:15:50","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:15:50","url":"/admin/login"}}
+{"level":"info","message":{"method":"POST","status":302,"timestamp":"31/05/2025, 15:15:57","url":"/admin/login"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:15:57","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:15:59","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:16:30","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:17:22","url":"/admin/logStats"}}
+{"level":"error","message":{"method":"GET","status":500,"timestamp":"31/05/2025, 15:29:13","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:29:29","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:29:56","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:31:41","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:32:14","url":"/admin/logStats"}}
+{"level":"error","message":{"method":"GET","status":500,"timestamp":"31/05/2025, 15:33:29","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:33:41","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:34:53","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:35:05","url":"/admin/logStats"}}
+{"level":"error","message":{"method":"GET","status":404,"timestamp":"31/05/2025, 15:35:12","url":"/diary"}}
+{"level":"error","message":{"method":"GET","status":404,"timestamp":"31/05/2025, 15:35:14","url":"/diarys"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 15:35:15","url":"/"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:35:17","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:35:19","url":"/posts/683a479880134643c0740a0a"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:37:08","url":"/admin/logStats"}}
+{"level":"error","message":{"method":"GET","status":500,"timestamp":"31/05/2025, 15:37:25","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:37:30","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:45:16","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 15:45:22","url":"/posts/683a479880134643c0740a0a"}}
+{"level":"error","message":{"method":"GET","status":404,"timestamp":"31/05/2025, 15:45:26","url":"/downloads/683a479880134643c0740a0a"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:45:44","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:49:18","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 15:49:24","url":"/posts/683a479880134643c0740a0a"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 15:51:16","url":"/posts/683a479880134643c0740a0a"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:51:19","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 15:51:21","url":"/posts/683a479880134643c0740a0a"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:51:23","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":302,"timestamp":"31/05/2025, 15:55:27","url":"/logout"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 15:55:27","url":"/"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:55:29","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:55:30","url":"/login"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:55:32","url":"/register"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:56:34","url":"/register"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:57:49","url":"/register"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 15:58:19","url":"/login"}}
+{"level":"info","message":{"method":"POST","status":200,"timestamp":"31/05/2025, 15:58:47","url":"/register"}}
+{"level":"info","message":{"method":"POST","status":302,"timestamp":"31/05/2025, 15:59:24","url":"/login"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:59:24","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":302,"timestamp":"31/05/2025, 15:59:45","url":"/logout"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 15:59:45","url":"/"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:59:46","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:59:48","url":"/login"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 15:59:49","url":"/register"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 16:01:58","url":"/"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 16:02:00","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:02:01","url":"/login"}}
+{"level":"info","message":{"method":"GET","status":302,"timestamp":"31/05/2025, 16:02:04","url":"/auth/google"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 16:02:50","url":"/"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:02:53","url":"/diario"}}
+{"level":"info","message":{"method":"GET","status":302,"timestamp":"31/05/2025, 16:02:57","url":"/admin/"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:02:57","url":"/admin/login"}}
+{"level":"info","message":{"method":"POST","status":302,"timestamp":"31/05/2025, 16:02:59","url":"/admin/login"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:02:59","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:03:00","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:03:31","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:05:07","url":"/admin/logs"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 16:05:13","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:05:23","url":"/admin/logs"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:05:25","url":"/admin/logStats"}}
+{"level":"error","message":{"method":"GET","status":404,"timestamp":"31/05/2025, 16:05:29","url":"/favicon.ico"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:05:48","url":"/admin/logs"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:05:51","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"31/05/2025, 16:05:55","url":"/admin/logs"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 16:05:57","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 16:07:31","url":"/admin"}}
+{"level":"info","message":{"method":"GET","status":304,"timestamp":"31/05/2025, 16:09:55","url":"/"}}

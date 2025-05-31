@@ -116,7 +116,7 @@ router.post('/', isAuthenticated, isAdmin, uploadSip.single('sipFile'), async (r
         }
         
         const diaryEntry = {
-            producer: req.body.producer,
+            producer: req.user.email,
             title: metadata.title,
             content: metadata.content,
             createdAt: new Date(),
