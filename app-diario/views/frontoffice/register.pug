@@ -1,43 +1,79 @@
 extends ../layout
-
 block content
-  .w3-container.w3-padding-64
-    .w3-card-4.w3-white(style="max-width: 600px; margin: auto;")
-      .w3-container.w3-teal
-        h2.w3-center Register
-      
-      form.w3-container.w3-padding-16(action="/register" method="POST")
-        if error
-          .w3-panel.w3-pale-red.w3-border
-            p= error
+    .w3-container.w3-display-middle
+        .w3-card-4.w3-round-large.register-card(style="width:500px;")
+            header.w3-container.w3-center.w3-round-large.header-gradient
+                i.fas.fa-user-plus.user-icon
+                h2.w3-center(style="color: white; font-weight:bold; margin: 8px 0;") Register
+            form.w3-container.w3-padding-12(action="/register" method="POST")
+                if error
+                    .w3-panel.w3-pale-red.w3-border
+                        p= error
+                .w3-margin-bottom
+                    label.w3-text-teal
+                        b Email
+                    .input-wrapper
+                        i.fas.fa-envelope.input-icon
+                        input.w3-input.w3-border.w3-round(type="email" name="email" placeholder="ex: user@email.com" style="color: #737373;" required)
+                .w3-margin-bottom
+                    label.w3-text-teal
+                        b Username
+                    .input-wrapper
+                        i.fas.fa-user.input-icon
+                        input.w3-input.w3-border.w3-round(type="text" name="username" placeholder="Choose a username" style="color: #737373;" required)
+                .w3-margin-bottom
+                    label.w3-text-teal
+                        b Password
+                    .input-wrapper
+                        i.fas.fa-lock.input-icon
+                        input.w3-input.w3-border.w3-round(type="password" name="password" placeholder="*******" style="color: #737373;" required)
+                .w3-margin-bottom
+                    label.w3-text-teal
+                        b Full Name
+                    .input-wrapper
+                        i.fas.fa-id-card.input-icon
+                        input.w3-input.w3-border.w3-round(type="text" name="name" placeholder="Your full name" style="color: #737373;" required)
+                .w3-margin-bottom
+                    label.w3-text-teal
+                        b Birth Date
+                    .input-wrapper
+                        i.fas.fa-calendar.input-icon
+                        input.w3-input.w3-border.w3-round(type="date" name="birthdate" style="color: #737373;" required)
+                .w3-margin-bottom.w3-center
+                    button.w3-button.w3-teal.w3-round-large.w3-hover-teal.w3-hover-text-white.w3-block.btn-register(type="submit" style="transition: 0.3s; font-weight: bold; color: white;") Register
+            .w3-container.w3-light-grey.w3-padding-small.w3-round-large
+                p.w3-center(style="margin: 8px 0;") Already have an account?
+                    br
+                    a.w3-text-teal(href="/login" style="font-weight: bold; text-decoration: none;") Login here
 
-        .w3-margin-bottom
-          label.w3-text-grey
-            b Email
-          input.w3-input.w3-border(type="email" name="email" required)
-        
-        .w3-margin-bottom
-          label.w3-text-grey
-            b Username
-          input.w3-input.w3-border(type="text" name="username" required)
-        
-        .w3-margin-bottom
-          label.w3-text-grey
-            b Password
-          input.w3-input.w3-border(type="password" name="password" required)
-        
-        .w3-margin-bottom
-          label.w3-text-grey
-            b Full Name
-          input.w3-input.w3-border(type="text" name="name" required)
-        
-        .w3-margin-bottom
-          label.w3-text-grey
-            b Birth Date
-          input.w3-input.w3-border(type="date" name="birthdate" required)
-        
-        button.w3-button.w3-block.w3-teal.w3-margin-top(type="submit") Register
-      
-      .w3-container.w3-light-grey.w3-padding
-        p.w3-center Already have an account? 
-          a.w3-text-blue(href="/login") Login here
+    style.
+        .register-card {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(145deg, #ffffff, #f8f8f8);
+            transition: all 0.3s ease-in-out;
+        }
+        .header-gradient {
+            background: linear-gradient(to bottom, #00796b 0%, #70b7a1 100%);
+        }
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #009688;
+        }
+        .input-wrapper {
+            position: relative;
+        }
+        .input-wrapper input {
+            padding-left: 36px;
+        }
+        .btn-register:hover {
+            filter: brightness(0.9);
+            transform: scale(1.05);
+        }
+        .user-icon {
+            font-size: 36px;
+            margin-top: 8px;
+            color: #ffffffcc;
+        }

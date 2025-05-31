@@ -48,7 +48,8 @@ block content
                         select#tagFilter.w3-select.w3-border.w3-round-large(style="width: 200px; display: inline-block")
                             option(value="") Choose a tag...
                             each tag in tags || []
-                                option(value=tag)= tag
+                                - const formattedTag = tag.charAt(0).toUpperCase() + tag.slice(1)
+                                option(value=tag)= formattedTag
 
         .w3-row-padding
             each post in posts || []

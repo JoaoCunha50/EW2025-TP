@@ -14,12 +14,18 @@ block content
                     .w3-col.s8.w3-half
                         h3.w3-text-black(style="text-shadow: 1px 1px 3px rgba(0,0,0,0.3)")= "Francisco Castro"
                         h5.w3-text-black.w3-opacity= "Administrator"
-                button.w3-button.w3-round-large.w3-red.w3-hover-red.w3-margin-top(onclick="window.location.href='/logout'" style="transition: transform 0.3s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                button.w3-button.w3-round-large.w3-text-white.w3-red.w3-hover-red.w3-margin-top(onclick="window.location.href='/logout'" style="transition: transform 0.3s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
                         i.fa.fa-sign-out.w3-margin-right
                         | Logout
-                button.w3-button.w3-round-large.w3-blue.w3-hover-blue.w3-margin-top(onclick="window.location.href='/admin/users'" style="transition: transform 0.3s; margin-left: 12px" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                button.w3-button.w3-round-large.w3-text-white.w3-blue.w3-hover-blue.w3-margin-top(onclick="window.location.href='/admin/users'" style="transition: transform 0.3s; margin-left: 12px" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
                         i.fa.fa-user.w3-margin-right
-                        | User Dashboard
+                        | Users Dashboard
+                button.w3-button.w3-round-large.w3-text-white.w3-green.w3-hover-green.w3-hover-text-white.w3-margin-top(onclick="window.location.href='/admin/logs'" style="transition: transform 0.3s; margin-left: 12px" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                        i.fa.fa-list-alt.w3-margin-right
+                        | Logs
+                button.w3-button.w3-round-large.w3-text-white.w3-light-green.w3-hover-light-green.w3-hover-text-white.w3-margin-top(onclick="window.location.href='/admin/logStats'" style="transition: transform 0.3s; margin-left: 12px" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                        i.fa.fa-chart-bar.w3-margin-right
+                        | Statistics
 
         .w3-row.w3-margin-bottom
             .w3-col.s12

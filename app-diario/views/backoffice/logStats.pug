@@ -1,0 +1,249 @@
+extends ../layout
+block content
+    .w3-container.w3-padding-32.w3-padding-large
+        if error 
+            .w3-panel.w3-red.w3-display-container.w3-round-large.w3-margin-bottom
+                span.w3-button.w3-display-topright(onclick="this.parentElement.style.display='none'") &times;
+                h3 Error!
+                p= error
+
+        // Header com botões
+        .w3-row.w3-margin-bottom.w3-padding-16.w3-round-large.w3-white(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
+            h1.w3-center(style="color: #2c3e50; margin: 0")
+                i.fa.fa-bar-chart.w3-margin-right
+                | Estatísticas do Sistema
+            .w3-col.l9.m8.s12.w3-container
+                .w3-row
+                    button.w3-button.w3-round-large.w3-red.w3-hover-red.w3-margin-top(onclick="window.location.href='/logout'" style="transition: transform 0.3s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                        i.fa.fa-sign-out.w3-margin-right
+                        | Logout
+                    button.w3-button.w3-round-large.w3-blue.w3-hover-blue.w3-margin-top(onclick="window.location.href='/admin'" style="transition: transform 0.3s; margin-left: 12px" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                        i.fa.fa-dashboard.w3-margin-right
+                        | Dashboard
+                    button.w3-button.w3-round-large.w3-green.w3-hover-green.w3-margin-top(onclick="window.location.href='/admin/logs'" style="transition: transform 0.3s; margin-left: 12px" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                        i.fa.fa-list-alt.w3-margin-right
+                        | Logs
+        if stats && stats.summary
+            .w3-row.w3-margin-bottom(style="display: flex; justify-content: space-evenly; flex-wrap: wrap")
+                .w3-col.l3.m6.s12.w3-padding
+                    .stat-card.w3-card.w3-round-large.w3-white.w3-padding(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center")
+                        i.fa.fa-globe.w3-jumbo(style="opacity: 0.8")
+                        h3(style="margin: 10px 0 5px 0; font-size: 2.5em")= stats.summary.totalRequests || 0
+                        p(style="margin: 0; font-size: 1.1em; opacity: 0.9") Total de Requests
+                .w3-col.l3.m6.s12.w3-padding
+                    .stat-card.w3-card.w3-round-large.w3-white.w3-padding(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1); background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; text-align: center")
+                        i.fa.fa-users.w3-jumbo(style="opacity: 0.8")
+                        h3(style="margin: 10px 0 5px 0; font-size: 2.5em")= stats.logins
+                        p(style="margin: 0; font-size: 1.1em; opacity: 0.9") Logins
+                .w3-col.l3.m6.s12.w3-padding
+                    .stat-card.w3-card.w3-round-large.w3-white.w3-padding(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1); background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; text-align: center")
+                        i.fa.fa-check-circle.w3-jumbo(style="opacity: 0.8")
+                        h3(style="margin: 10px 0 5px 0; font-size: 2.5em")= (stats.summary.successRate || 0) + '%'
+                        p(style="margin: 0; font-size: 1.1em; opacity: 0.9") Taxa de Sucesso
+
+        if stats && stats.charts
+            .w3-row.w3-margin-bottom
+                .w3-col.l6.m12.s12.w3-padding
+                    .w3-card.w3-round-large.w3-white.w3-padding(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
+                        h4(style="margin-top: 0; color: #2c3e50")
+                            i.fa.fa-pie-chart.w3-margin-right
+                            | Status Codes
+                        #statusChart(style="height: 400px")
+                .w3-col.l6.m12.s12.w3-padding
+                    .w3-card.w3-round-large.w3-white.w3-padding(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
+                        h4(style="margin-top: 0; color: #2c3e50")
+                            i.fa.fa-clock-o.w3-margin-right
+                            | Horários de Pico
+                        #hoursChart(style="height: 400px")
+        if stats && stats.topUrls && stats.topUrls.length > 0
+            .w3-row.w3-margin-bottom
+                .w3-col.s12
+                    .w3-card.w3-round-large.w3-white.w3-padding(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
+                        h4(style="margin-top: 0; color: #2c3e50")
+                            i.fa.fa-trophy.w3-margin-right
+                            | Top 10 URLs Mais Acessadas
+                        #topUrlsTable
+                            each url in stats.topUrls
+                                .url-row
+                                    .url-path= url.url
+                                    .url-stats
+                                        span.w3-margin-right
+                                            i.fa.fa-eye.w3-margin-right
+                                            = url.count + ' acessos'
+        if topPosts && topPosts.length > 0
+            .w3-row.w3-margin-bottom
+                .w3-col.s12
+                    .w3-card.w3-round-large.w3-white.w3-padding(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
+                        h4(style="margin-top: 0; color: #2c3e50")
+                            i.fa.fa-star.w3-margin-right
+                            | Top 10 Posts Mais Visitados
+                        #topPostsTable
+                            each post in topPosts
+                                .url-row(style="padding: 12px; margin-bottom: 8px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #28a745; transition: all 0.3s ease; position: relative")
+                                    .url-path(style="font-weight: 600; color: #2c3e50; margin-bottom: 4px")= post.title || 'Título não encontrado'
+                                    .url-stats
+                                        span.w3-margin-right
+                                            i.fa.fa-user.w3-margin-right
+                                            = 'Autor: ' + (post.author || 'Desconhecido')
+                                        span.w3-margin-right
+                                            i.fa.fa-eye.w3-margin-right
+                                            = post.count + ' acessos'
+                                    a.w3-button.w3-round.w3-small.w3-blue.w3-hover-blue(style="position: absolute; top: 50%; right: 12px; transform: translateY(-50%); padding: 6px 12px; font-size: 12px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1)", href=`/posts/${post.id}`, title="Ver post")
+                                        i.fa.fa-external-link.w3-margin-right
+                                        | Ver
+
+        if topDownloads && topDownloads.length > 0
+            .w3-row.w3-margin-bottom
+                .w3-col.s12
+                    .w3-card.w3-round-large.w3-white.w3-padding(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
+                        h4(style="margin-top: 0; color: #2c3e50")
+                            i.fa.fa-download.w3-margin-right
+                            | Top 10 Downloads de Posts
+                        #topDownloadsTable
+                            each download in topDownloads
+                                .url-row(style="padding: 12px; margin-bottom: 8px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #CC0000; transition: all 0.3s ease; position: relative")
+                                    .url-path(style="font-weight: 600; color: #2c3e50; margin-bottom: 4px")= download.title || 'Título não encontrado'
+                                    .url-stats
+                                        span.w3-margin-right
+                                            i.fa.fa-user.w3-margin-right
+                                            = 'Autor: ' + (download.author || 'Desconhecido')
+                                        span.w3-margin-right
+                                            i.fa.fa-download.w3-margin-right
+                                            = download.count + ' downloads'
+                                    a.w3-button.w3-round.w3-small.w3-blue.w3-hover-blue(style="position: absolute; top: 50%; right: 12px; transform: translateY(-50%); padding: 6px 12px; font-size: 12px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1)", href=`/posts/${download.id}`, title="Ver post")
+                                        i.fa.fa-external-link.w3-margin-right
+                                        | Ver
+        if !stats
+            .w3-row
+                .w3-col.s12
+                    .w3-card.w3-round-large.w3-pale-yellow.w3-padding.w3-center
+                        h3
+                            i.fa.fa-info-circle.w3-margin-right
+                            | Nenhum dado disponível
+                        p Não foram encontrados logs para exibir estatísticas.
+
+block scripts
+    script(src='https://cdn.plot.ly/plotly-2.32.0.min.js')
+
+    script.
+        const statsData = !{stats ? JSON.stringify(stats) : 'null'}; 
+
+        function createStatusChart() { // função para os status code
+            if (!statsData || !statsData.charts || !statsData.charts.statusCodes) return;
+
+            const data = statsData.charts.statusCodes;
+
+            // Ordenar os dados por contagem (maior para menor)
+            const sortedData = data.sort((a, b) => b.count - a.count);
+
+            // Definir as cores para o ranking
+            const rankingColors = ['#008080', '#00a3a3', '#00ffff', '#cdffff'];
+
+            const trace = {
+                labels: sortedData.map(d => d.status),
+                values: sortedData.map(d => d.count),
+                type: 'pie',
+                marker: {
+                    colors: sortedData.map((d, index) => rankingColors[index] || '#e0f7f7')
+                }
+            };
+
+            const layout = {
+                title: '',
+                margin: { t: 30, r: 30, b: 30, l: 30 }
+            };
+
+            Plotly.newPlot('statusChart', [trace], layout, { responsive: true });
+        }
+
+        function createHoursChart() { // Função para os horários de pico
+            if (!statsData || !statsData.charts || !statsData.charts.hourlyData) return;
+
+            const data = statsData.charts.hourlyData;
+
+            const trace = {
+                x: data.map(d => d.hour),
+                y: data.map(d => d.requests),
+                type: 'bar',
+                marker: { color: '#008080' }
+            };
+
+            const layout = {
+                title: '',
+                xaxis: { // solução do chatgpt para ordenar o eixo X (estava ordenado alfabeticamente!!!!) 
+                    title: 'Hora do Dia',
+                    type: 'category',
+                    categoryorder: 'array',
+                    categoryarray: Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0') + ':00')
+                },
+                yaxis: { title: 'Requests' },
+                margin: { t: 30, r: 30, b: 60, l: 50 }
+            };
+
+
+            Plotly.newPlot('hoursChart', [trace], layout, {responsive: true});
+        }
+
+        // Inicializar gráficos quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            if (statsData) {
+                createStatusChart();
+                createHoursChart();
+            }
+        });
+
+    style.
+        .stat-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+
+        .w3-select {
+            height: 40px;
+            padding: 8px 12px;
+        }
+
+        #topUrlsTable {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .url-row {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+            transition: all 0.3s ease;
+        }
+
+        .url-row:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .url-path {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .url-stats {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        @media (max-width: 600px) {
+            .stat-card h3 {
+                font-size: 2em !important;
+            }
+
+            .stat-card i {
+                font-size: 2.5em !important;
+            }
+        }

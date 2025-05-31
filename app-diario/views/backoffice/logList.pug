@@ -1,0 +1,167 @@
+extends ../layout
+block content
+    .w3-container.w3-padding-32.w3-padding-large
+        if error 
+            .w3-panel.w3-red.w3-display-container.w3-round-large.w3-margin-bottom
+                span.w3-button.w3-display-topright(onclick="this.parentElement.style.display='none'") &times;
+                h3 Error!
+                p= error
+        .w3-row.w3-margin-bottom.w3-padding-16.w3-round-large.w3-white(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
+            h1.w3-center(style="color: #2c3e50; margin: 0")
+                i.fa.fa-list.w3-margin-right
+                | Lista de Logs
+            .w3-col.l9.m8.s12.w3-container
+                .w3-row
+                    button.w3-button.w3-round-large.w3-red.w3-hover-red.w3-margin-top(onclick="window.location.href='/logout'" style="transition: transform 0.3s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                        i.fa.fa-sign-out.w3-margin-right
+                        | Logout
+                    button.w3-button.w3-round-large.w3-blue.w3-hover-blue.w3-margin-top(onclick="window.location.href='/admin'" style="transition: transform 0.3s; margin-left: 12px" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                        i.fa.fa-dashboard.w3-margin-right
+                        | Dashboard
+                    button.w3-button.w3-round-large.w3-green.w3-hover-light-green.w3-margin-top(onclick="window.location.href='/admin/logStats'" style="transition: transform 0.3s; margin-left: 12px" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'") 
+                        i.fa.fa-chart-bar.w3-margin-right
+                        | Statistics
+        .w3-row.w3-margin-bottom
+            .w3-col.s12
+                .w3-card.w3-round-large.w3-white.w3-padding(style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1)")
+                    h3.w3-panel.w3-border-bottom 
+                        i.fa.fa-list-alt.w3-margin-right
+                        | Logs Overview
+                    
+                    // Header da tabela
+                    .log-header.w3-row.w3-margin-bottom(style="padding: 12px 16px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; font-weight: bold; color: #495057")
+                        .w3-col.s3.m2
+                            i.fa.fa-calendar.w3-margin-right
+                            | Date
+                        .w3-col.s2.m2
+                            i.fa.fa-code.w3-margin-right
+                            | Method
+                        .w3-col.s2.m2
+                            i.fa.fa-signal.w3-margin-right
+                            | Status
+                        .w3-col.s5.m6
+                            i.fa.fa-link.w3-margin-right
+                            | URL
+                    
+                    // Logs
+                    .logs-container
+                        each log in logs
+                            -
+                                var statusColor = '#f8f9fa';
+                                var borderColor = '#6c757d';
+                                var badgeColor = '#6c757d';
+                                var methodColor = '#6c757d';
+                                
+                                if (log.status >= 200 && log.status < 300) {
+                                    statusColor = 'rgba(40, 167, 69, 0.1)';
+                                    borderColor = '#28a745';
+                                    badgeColor = '#28a745';
+                                } else if (log.status >= 300 && log.status < 400) {
+                                    statusColor = 'rgba(255, 193, 7, 0.1)';
+                                    borderColor = '#ffc107';
+                                    badgeColor = '#ffc107';
+                                } else if (log.status >= 400 && log.status < 500) {
+                                    statusColor = 'rgba(255, 90, 96, 0.1)';
+                                    borderColor = '#ff5a60';
+                                    badgeColor = '#ff5a60';
+                                } else if (log.status >= 500) {
+                                    statusColor = 'rgba(220, 53, 69, 0.1)';
+                                    borderColor = '#dc3545';
+                                    badgeColor = '#dc3545';
+                                }
+                                
+                                switch(log.method.toUpperCase()) {
+                                    case 'GET':
+                                        methodColor = '#6c757d';
+                                        break;
+                                    case 'POST':
+                                        methodColor = '#495057';
+                                        break;
+                                    case 'PUT':
+                                        methodColor = '#6c757d';
+                                        break;
+                                    case 'DELETE':
+                                        methodColor = '#343a40';
+                                        break;
+                                    case 'PATCH':
+                                        methodColor = '#6c757d';
+                                        break;
+                                    default:
+                                        methodColor = '#6c757d';
+                                }
+                                
+                                var [dateString, timeString] = log.timestamp.split(', ')
+                            
+                            .log-row.w3-row.w3-margin-bottom(style=`background: ${statusColor}; padding: 16px; border-radius: 8px; border-left: 4px solid ${borderColor}; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05)` onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)'")
+                                .w3-col.s3.m2.log-timestamp
+                                    .timestamp-main(style="font-weight: 500; color: #2c3e50")= dateString
+                                    .timestamp-sub(style="font-size: 0.8em; color: #6c757d; margin-top: 2px")= timeString
+                                .w3-col.s2.m2.log-method
+                                    span.method-text(style=`color: ${methodColor}; font-weight: 600; font-size: 0.9em`)= log.method
+                                .w3-col.s2.m2.log-status
+                                    span.status-badge(style=`background: ${badgeColor}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: 500`)= log.status
+                                .w3-col.s5.m6.log-url
+                                    .url-path(style="color: #2c3e50; font-weight: 500; word-break: break-all; line-height: 1.4")= log.url
+
+block scripts
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+
+    style.
+        .log-row:hover {
+            cursor: pointer;
+        }
+        
+        .logs-container {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        
+        .logs-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .logs-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .logs-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .logs-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        @media (max-width: 600px) {
+            .log-header .w3-col,
+            .log-row .w3-col {
+                margin-bottom: 8px;
+            }
+            
+            .log-header {
+                display: none;
+            }
+            
+            .log-row {
+                display: block !important;
+            }
+            
+            .log-row > div {
+                width: 100% !important;
+                margin-bottom: 8px;
+            }
+            
+            .log-row > div:before {
+                font-weight: bold;
+                display: inline-block;
+                width: 80px;
+            }
+            
+            .log-timestamp:before { content: "Hora: "; }
+            .log-method:before { content: "Método: "; }
+            .log-status:before { content: "Status: "; }
+            .log-url:before { content: "URL: "; }
+        }
