@@ -18,9 +18,7 @@ O projeto final da UC Engenharia Web consiste no desenvolvimento de uma aplicaç
 
 A solução abrange:
 - *Frontend* desenvolvida com PUG e estilizada com W3.CSS e CSS nativo, permitindo a navegação fluida pelos conteúdos públicos.
-- *Backend* **(ver isto)**
-- Sistema de ingestão, armazenamento e disseminação de conteúdos com base no modelo OAIS **(ver isto)**
-- Persistência de dados em MongoDB e sistema de ficheiros **(ver isto)**
+- *API REST* que faz a conexão a uma base de dados MongoDB
 
 ---
 
@@ -171,8 +169,35 @@ Por fim, nas páginas de estatísticas, o administrador tem a seu dispor informa
 |               Página de estatísticas 2                |
 
 
-## API
-FALAR DA API
+## 🛠️ API
+De modo a comunicar com o backend, o grupo implementou uma API REST que liga as componentes do projeto.
+### Endpoints
+#### Relacionados com Utilizadores
+- `GET /api/users/` – Lista todos os utilizadores (exceto administradores). Requer autenticação e ser admin;
+- `POST /api/users/` - Cria um novo utilizador com os dados fornecidos no corpo da requisição;
+- `GET /api/users/:email` - Recolhe os dados de um utilizador com base no email. Requer autenticação e ser admin;
+- `DELETE /api/users/:email` - Remove um utilizador com base no email. Requer autenticação e ser admin;
+- `PUT /api/users/:email` - Atualiza os dados de um utilizador com base no email. Requer autenticação e ser admin;
+  
+#### Relacionados com o Diário
+- `GET /api/diary` - Lista entradas do diário, podendo filtrar por isPublic=true e/ou tags;
+- `GET /api/diary/:id` – Recolhe os dados de uma entrada específica do diário com base no seu ID;
+- `GET /api/diary/download/:id` – Gera e descarrega um ficheiro .zip da entrada com manifesto e ficheiros associados; 
+- `POST /api/diary` – Cria uma nova entrada no diário a partir de um ficheiro SIP .zip. Requer autenticação e ser admin;
+- `PUT /api/diary/:id` – Atualiza uma entrada existente, podendo adicionar/remover ficheiros. Requer autenticação e ser admin;
+- `DELETE /api/diary/:id` – Apaga uma entrada do diário e os ficheiros associados. Requer autenticação e ser admin;
+- `POST /api/diary/:id/comments` – Adiciona um comentário a uma entrada do diário. Requer autenticação;
+
+#### Relacionados com Autenticação
+- `POST /auth/login` - Autentica um utilizador regular (email + password). Retorna token JWT.
+- `POST /auth/admin/login` - Autentica um administrador (email + password). Retorna token JWT.
+- `GET /auth/google` - Inicia autenticação via Google OAuth2 (redireciona para login do Google).
+- `GET /auth/google/callback` - Callback após autenticação Google. Gera token JWT, define cookies e redireciona o utilizador.
+- `GET /auth/facebook` - Inicia autenticação via Facebook OAuth (redireciona para login do Facebook).
+- `GET /auth/facebook/callback`- Callback após autenticação Facebook. Gera token JWT, define cookies e redireciona o utilizador.
+
+> [!WARNING]
+>  No caso da autenticação com o facebbok, era necessário termos página de política de privacidade e um Business Account para poder ter acesso a dados de outros users que não os users presentes na app de desenvolvimento do Meta Developers, logo apenas os nossos users conseguem utilizar esse login.
 
 ## 🚀 Execução
 Para executar o projeto, optámos por desenvolver um *docker compose*. Desta maneira, para executar o projeto, basta introduzir o seguinte comando na raíz do projeto.
