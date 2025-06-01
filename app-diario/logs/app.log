@@ -234,3 +234,5 @@
 {"level":"info","message":{"method":"GET","status":304,"timestamp":"01/06/2025, 17:20:18","url":"/diario"}}
 {"level":"info","message":{"method":"GET","status":200,"timestamp":"01/06/2025, 17:20:20","url":"/admin/"}}
 {"level":"info","message":{"method":"GET","status":200,"timestamp":"01/06/2025, 17:20:21","url":"/admin/logStats"}}
+{"level":"error","message":{"method":"GET","status":500,"timestamp":"01/06/2025, 19:58:20","url":"/admin/logStats"}}
+{"level":"info","message":{"method":"GET","status":200,"timestamp":"01/06/2025, 20:00:53","url":"/admin/logStats"}}

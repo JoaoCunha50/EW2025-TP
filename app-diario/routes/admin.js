@@ -216,30 +216,38 @@ router.get("/logStats", isAdmin, async function (req, res) {
 
       const statisticsData = getStatisticsForView(logs);
 
-      const topPostsWithDetails = statisticsData.topPosts.map((topPost) => {
-        const postDetails = posts.find(
-          (post) => post._id === topPost.url.split("/posts/")[1]
-        );
+      const topPostsWithDetails = statisticsData.topPosts
+        .map((topPost) => {
+          const postDetails = posts.find(
+        (post) => post._id === topPost.url.split("/posts/")[1]
+          );
 
-        return {
-          id: postDetails._id || null,
-          title: postDetails.title,
-          author: postDetails.producer,
-          count: topPost.count,
-        };
-      });
+          if (!postDetails) return null;
 
-      const topDownloadsWithDetails = statisticsData.topDownloads.map((topDownload) => {
-        const postId = topDownload.url
-        const downloadDetails = posts.find((post) => post._id === postId);
-      
-        return {
-          id: downloadDetails._id || null,
-          title: downloadDetails.title || "Título não encontrado",
-          author: downloadDetails.producer || "Autor desconhecido",
-          count: topDownload.count,
-        };
-      });
+          return {
+        id: postDetails._id,
+        title: postDetails.title,
+        author: postDetails.producer,
+        count: topPost.count,
+          };
+        })
+        .filter(Boolean);
+
+      const topDownloadsWithDetails = statisticsData.topDownloads
+        .map((topDownload) => {
+          const postId = topDownload.url;
+          const downloadDetails = posts.find((post) => post._id === postId);
+
+          if (!downloadDetails) return null;
+
+          return {
+        id: downloadDetails._id,
+        title: downloadDetails.title,
+        author: downloadDetails.producer,
+        count: topDownload.count,
+          };
+        })
+        .filter(Boolean);
 
       res.render("logStats", {
         title: "Admin - Logs",
