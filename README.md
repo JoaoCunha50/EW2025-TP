@@ -1,7 +1,7 @@
 # 🧠 I Am... (in Bits and Bytes) – O Meu Eu Digital
 
 ### Projeto Final – Engenharia Web 2025  
-**Grupo:** 24 - PixelPulse
+**Grupo:** 24 - Pixel Pulse
 
 **Autores:** João Manuel Machado da Cunha (A104611) / João Pedro Ribeiro de Sá (A104612) / Gonçalo da Silva Alves (A104079)
 
