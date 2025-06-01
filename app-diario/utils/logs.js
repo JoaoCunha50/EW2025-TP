@@ -191,7 +191,7 @@ function generateTopPostsData(logs) {
   logs.forEach((log) => {
     if (
       log.url.startsWith("/posts/") &&
-      !log.url.startsWith("/posts/downloads/")
+      !log.url.startsWith("/posts/download/")
     ) {
       postStats[log.url] = (postStats[log.url] || 0) + 1;
     }
@@ -207,8 +207,8 @@ function generateTopDownloads(logs) {
   const postStats = {};
 
   logs.forEach((log) => {
-    if (log.url.startsWith("/posts/downloads/")) {
-      const id = log.url.split("/posts/downloads/")[1];
+    if (log.url.startsWith("/posts/download/")) {
+      const id = log.url.split("/posts/download/")[1];
       postStats[id] = (postStats[id] || 0) + 1;
     }
   });
