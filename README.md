@@ -9,7 +9,7 @@
 
 **Docente:** José Carlos Ramalho
 
-**Nota:** ? / 20 ⭐
+**Nota:** 19 / 20 ⭐
 
 ---
 
